@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+::ng-deep .pdl-select.hide-subscript.mat-mdc-form-field {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+::ng-deep .pdl-select .mat-mdc-select-value {
+  font-size: 14px !important;
+  font-family: "Open Sans" !important;
+  letter-spacing: normal !important;
+}
+
+::ng-deep .pdl-select .mat-mdc-select-arrow svg {
+  color: var(--nav-contrast) !important;
+  background-color: var(--nav-color) !important;
+  border-radius: 50%;
+}
+
+::ng-deep
+  .pdl-select.mat-primary
+  .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full,
+.mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-full {
+  background-color: var(--nav-color) !important;
+}
+::ng-deep
+  .pdl-select.mat-primary
+  .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full::after,
+.mat-primary
+  .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-full::after {
+  color: var(--nav-contrast) !important;
+}
+
+::ng-deep {
+  .searchBar {
+    width: 100%;
+    height: 3rem;
+    border: 0;
+    border-bottom: 1px solid gray;
+    padding: 0 1rem;
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  // .mat-mdc-text-field-wrapper {
+  //   background-color: white !important;
+  // }
+
+  .mat-mdc-select-panel {
+    display: flex !important;
+    flex-direction: column;
+    .searchBar {
+      overflow: hidden;
+    }
+    .scrollbar {
+      overflow: auto;
+      flex: 1;
+    }
+  }
+}
+
+.noResults {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  font-weight: 500;
+  color: var(--nav-color);
+}

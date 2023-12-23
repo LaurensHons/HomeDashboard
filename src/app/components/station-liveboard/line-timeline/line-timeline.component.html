@@ -1,0 +1,18 @@
+<p-timeline
+  [value]="stops"
+  layout="horizontal"
+  [style.width.px]="stops.length * 100"
+  class="d-block"
+>
+  <ng-template pTemplate="opposite" let-event>
+    <span class="stationname">
+      {{ event.station }}
+    </span>
+  </ng-template>
+  <ng-template pTemplate="content" let-event>
+    <span class="timestamp">
+      {{ event.scheduledArrivalTimeStamp | date : "HH:mm" }}
+    </span>
+    <span class="delay" *ngIf="event.delay > 0">+ {{ event.delay / 60 }}</span>
+  </ng-template>
+</p-timeline>
