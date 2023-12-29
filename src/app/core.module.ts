@@ -17,6 +17,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { CookieService } from 'ngx-cookie-service';
 import { MatButtonModule } from '@angular/material/button';
 import { TimelineModule } from 'primeng/timeline';
+import { ChartModule } from 'primeng/chart';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   providers: [CookieService],
@@ -37,6 +40,9 @@ import { TimelineModule } from 'primeng/timeline';
     MatIconModule,
     MatButtonModule,
     TimelineModule,
+    ChartModule,
+    MatProgressBarModule,
+    ProgressBarModule,
   ],
   exports: [
     CommonModule,
@@ -52,6 +58,9 @@ import { TimelineModule } from 'primeng/timeline';
     MatIconModule,
     MatButtonModule,
     TimelineModule,
+    ChartModule,
+    MatProgressBarModule,
+    ProgressBarModule,
   ],
 })
 export class CoreModule {}

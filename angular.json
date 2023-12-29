@@ -88,7 +88,7 @@
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": ["../node_modules/chart.js/dist/chart.js"]
           }
         }
       }

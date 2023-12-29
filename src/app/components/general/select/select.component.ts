@@ -290,7 +290,6 @@ export class SelectComponent<T>
       !changes[key].isFirstChange();
     if (hasChanges('options')) {
       this.filterOptions();
-      console.log(this.options, this.filteredOptions.value);
     }
   }
 

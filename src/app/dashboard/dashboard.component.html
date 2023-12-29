@@ -1,15 +1,47 @@
-<div class="nmbs">
-  <app-station-select
-    #stationSelect
-    [(activeStation)]="activeNMBSSation"
-    (activeStationChange)="onStationChange($event)"
-    class="w-100 select"
-  >
-  </app-station-select>
+<p-progressBar
+  class="progress"
+  [value]="(timeoutPercentage | async) || 100"
+  [@openClose]="hover ? 'open' : 'closed'"
+  (mouseenter)="hover = true"
+  (mouseleave)="hover = false"
+  (click)="onProgressbarClick()"
+>
+  <ng-template pTemplate="content" let-value>
+    <span>Click to refresh</span>
+  </ng-template>
+</p-progressBar>
+<div class="maincontent">
+  <div class="nmbs">
+    <app-station-select
+      #stationSelect
+      [(activeStation)]="activeNMBSSation"
+      (activeStationChange)="onStationChange($event)"
+      class="w-100 select"
+    >
+    </app-station-select>
 
-  <app-station-liveboard
-    class="liveboard"
-    [station]="activeNMBSSation"
-    (saveStation)="saveStation($event)"
-  ></app-station-liveboard>
+    <app-station-liveboard
+      class="liveboard"
+      [station]="activeNMBSSation"
+      (saveStation)="saveStation($event)"
+    ></app-station-liveboard>
+  </div>
+
+  <div class="secondrow">
+    <iframe
+      *ngIf="lat && lon"
+      [src]="buienradarIframe | safe : 'resourceUrl'"
+      NORESIZE
+      SCROLLING="NO"
+      HSPACE="0"
+      VSPACE="0"
+      FRAMEBORDER="0"
+      MARGINHEIGHT="0"
+      MARGINWIDTH="0"
+      WIDTH="256"
+      HEIGHT="256"
+    ></iframe>
+    <app-buienradar-graph [lon]="lon" [lat]="lat" [refreshObservable]="refresh">
+    </app-buienradar-graph>
+  </div>
 </div>
