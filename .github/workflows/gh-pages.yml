@@ -3,7 +3,7 @@ name: Pulblish to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
