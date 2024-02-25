@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core.module';
+import { StyleService } from './services/style.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { CoreModule } from './core.module';
 export class AppComponent {
   title = 'home-dashboard';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private style: StyleService) {}
 
   goToDashboard() {
     this.router.navigate(['dash']);

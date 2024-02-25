@@ -89,7 +89,8 @@ export class StationSelectComponent implements OnInit {
   writeFavorites() {
     this.cookieService.set(
       'favorites',
-      JSON.stringify(this.favorites.value.map((fav: NMBSStation) => fav.id))
+      JSON.stringify(this.favorites.value.map((fav: NMBSStation) => fav.id)),
+      399
     );
   }
 }

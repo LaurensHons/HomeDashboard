@@ -1,0 +1,11 @@
+<mat-form-field class="w-100">
+  <input matInput placeholder="label" [formControl]="searchForm" />
+</mat-form-field>
+
+<div class="scroll scrollbar">
+  <div class="options">
+    <div *ngFor="let halte of filteredOptions" class="halte">
+      <span (click)="selectHalte(halte)">{{ halte.omschrijving }}</span>
+    </div>
+  </div>
+</div>

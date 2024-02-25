@@ -21,6 +21,8 @@ import {
   animate,
 } from '@angular/animations';
 import { SafePipe } from '../pipes/safe.pipe';
+import { HalteSelectComponent } from '../components/halte-select/halte-select.component';
+import { StyleService } from '../services/style.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,6 +33,7 @@ import { SafePipe } from '../pipes/safe.pipe';
     StationLiveboardComponent,
     BuienradarGraphComponent,
     SafePipe,
+    HalteSelectComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -74,7 +77,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   hover = false;
 
-  constructor(private fac: StateFacade) {}
+  constructor(private fac: StateFacade, private style: StyleService) {}
 
   ngOnInit(): void {
     navigator.geolocation.getCurrentPosition(
@@ -107,6 +110,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.timeout.next(0);
 
     this.timeoutPercentage.subscribe((p) => console.log(p));
+  }
+
+  themes = [
+    {
+      id: 'lara-light-blue',
+      label: 'Lara Light Blue',
+    },
+    {
+      id: 'luna-green',
+      label: 'Luna Green',
+    },
+    {
+      id: 'bootstrap4-dark-blue',
+      label: 'Bootstrap 4 Dark Blue',
+    },
+  ];
+
+  selectedTheme: { id: string; label: string } = this.themes[0];
+
+  changeTheme(themeId: string) {
+    this.style.switchTheme(themeId);
+    console.log(themeId);
   }
 
   get buienradarIframe() {

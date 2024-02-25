@@ -20,6 +20,12 @@ import { TimelineModule } from 'primeng/timeline';
 import { ChartModule } from 'primeng/chart';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CardModule } from 'primeng/card';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { SplitterModule } from 'primeng/splitter';
 
 @NgModule({
   providers: [CookieService],
@@ -43,6 +49,12 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ChartModule,
     MatProgressBarModule,
     ProgressBarModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    CardModule,
+    TabMenuModule,
+    SplitterModule,
   ],
   exports: [
     CommonModule,
@@ -61,6 +73,12 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ChartModule,
     MatProgressBarModule,
     ProgressBarModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    CardModule,
+    TabMenuModule,
+    SplitterModule,
   ],
 })
 export class CoreModule {}

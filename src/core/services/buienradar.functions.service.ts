@@ -12,13 +12,13 @@ import {
   providedIn: 'root',
 })
 export class BRFunctionsService {
-  baseUrl = 'http://gpsgadget.buienradar.nl/data/raintext';
+  baseUrl = 'http://gpsgadget.buienradar.nl';
 
   constructor(private httpClient: HttpClient) {}
 
   getRadarInfo(lat: number, lon: number) {
     return this.httpClient
-      .get(`${this.baseUrl}?lat=${lat}&lon=${lon}`, {
+      .get(`${this.baseUrl}/data/raintext?lat=${lat}&lon=${lon}`, {
         responseType: 'text',
       })
       .pipe(first());

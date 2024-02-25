@@ -10,38 +10,62 @@
     <span>Click to refresh</span>
   </ng-template>
 </p-progressBar>
+<mat-select [(ngModel)]="selectedTheme" styleClass="mb-3">
+  <mat-option *ngFor="let theme of themes" (click)="changeTheme(theme.id)">
+    {{ theme.label }}
+  </mat-option>
+</mat-select>
 <div class="maincontent">
-  <div class="nmbs">
-    <app-station-select
-      #stationSelect
-      [(activeStation)]="activeNMBSSation"
-      (activeStationChange)="onStationChange($event)"
-      class="w-100 select"
-    >
-    </app-station-select>
+  <p-splitter
+    [style]="{ height: '100%' }"
+    layout="vertical"
+    [minSizes]="[10, 10]"
+  >
+    <ng-template pTemplate>
+      <div class="nmbs">
+        <app-station-select
+          #stationSelect
+          [(activeStation)]="activeNMBSSation"
+          (activeStationChange)="onStationChange($event)"
+          class="w-100 select"
+        >
+        </app-station-select>
 
-    <app-station-liveboard
-      class="liveboard"
-      [station]="activeNMBSSation"
-      (saveStation)="saveStation($event)"
-    ></app-station-liveboard>
-  </div>
-
-  <div class="secondrow">
-    <iframe
-      *ngIf="lat && lon"
-      [src]="buienradarIframe | safe : 'resourceUrl'"
-      NORESIZE
-      SCROLLING="NO"
-      HSPACE="0"
-      VSPACE="0"
-      FRAMEBORDER="0"
-      MARGINHEIGHT="0"
-      MARGINWIDTH="0"
-      WIDTH="256"
-      HEIGHT="256"
-    ></iframe>
-    <app-buienradar-graph [lon]="lon" [lat]="lat" [refreshObservable]="refresh">
-    </app-buienradar-graph>
-  </div>
+        <app-station-liveboard
+          class="liveboard"
+          [station]="activeNMBSSation"
+          (saveStation)="saveStation($event)"
+        ></app-station-liveboard>
+      </div>
+    </ng-template>
+    <ng-template pTemplate>
+      <div class="secondrow">
+        <iframe
+          *ngIf="lat && lon"
+          [src]="buienradarIframe | safe : 'resourceUrl'"
+          NORESIZE
+          SCROLLING="NO"
+          HSPACE="0"
+          VSPACE="0"
+          FRAMEBORDER="0"
+          MARGINHEIGHT="0"
+          MARGINWIDTH="0"
+          WIDTH="256"
+          HEIGHT="256"
+        ></iframe>
+        <app-buienradar-graph
+          [lon]="lon"
+          [lat]="lat"
+          [refreshObservable]="refresh"
+        >
+        </app-buienradar-graph>
+      </div>
+    </ng-template>
+    <ng-template pTemplate>
+      <div class="bottomrow">
+        <app-halte-select #halteSelect class=""> </app-halte-select>
+      </div>
+    </ng-template>
+    <ng-template pTemplate> </ng-template>
+  </p-splitter>
 </div>

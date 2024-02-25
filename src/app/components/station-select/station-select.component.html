@@ -1,16 +1,22 @@
-<app-select
-  [options]="stations$ | async"
-  optionDisplayValueKey="name"
-  [(ngModel)]="activeStation"
-  (ngModelChange)="onStationChange($event)"
-  label="Select Station"
->
-</app-select>
-<div class="favorites">
-  <div *ngFor="let station of favorites | async" class="station">
-    <span (click)="onStationChange(station)">{{ station?.name }}</span>
-    <button mat-icon-button class="removebtn" (click)="removeFavorite(station)">
-      <mat-icon>close</mat-icon>
-    </button>
+<p-card class="main">
+  <app-select
+    [options]="stations$ | async"
+    optionDisplayValueKey="name"
+    [(ngModel)]="activeStation"
+    (ngModelChange)="onStationChange($event)"
+    label="Select Station"
+  >
+  </app-select>
+  <div class="favorites">
+    <div *ngFor="let station of favorites | async" class="station">
+      <span (click)="onStationChange(station)">{{ station?.name }}</span>
+      <button
+        mat-icon-button
+        class="removebtn"
+        (click)="removeFavorite(station)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
   </div>
-</div>
+</p-card>

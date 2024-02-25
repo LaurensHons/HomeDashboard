@@ -16,6 +16,7 @@ import { CoreModule } from '../../core.module';
 import { NMBSFunctionsService } from '../../../core/services/nmbs.functions.service';
 import { catchError, first, of } from 'rxjs';
 import { LineTimelineComponent } from './line-timeline/line-timeline.component';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-station-liveboard',
@@ -29,7 +30,13 @@ export class StationLiveboardComponent implements OnInit, OnChanges {
 
   @Output() saveStation = new EventEmitter<NMBSStation>();
 
-  tabs: { name: string; data: NMBSDeparture[] }[] = [];
+  tabs: { label: string; value: string }[] = [];
+  activeTab: { label?: string; value?: string } = {
+    label: 'All',
+    value: 'All',
+  };
+  data: NMBSDeparture[] | undefined;
+  active: NMBSDeparture[] | undefined;
 
   loadingLiveboard = false;
   loadingRoute = false;
@@ -50,8 +57,10 @@ export class StationLiveboardComponent implements OnInit, OnChanges {
 
     if (hasChanges('station', true) && !!this.station?.id) {
       this.loadingLiveboard = true;
+      this.data = undefined;
       this.nmbsFunc.getDeparturesAndArrivals(this.station.id).subscribe(
         (data) => {
+          this.data = data;
           this.configureTabs(data);
           this.loadingLiveboard = false;
           console.log(data);
@@ -64,17 +73,26 @@ export class StationLiveboardComponent implements OnInit, OnChanges {
     }
   }
 
+  tabChange(tab: { value?: string; label?: string }) {
+    this.activeTab = tab;
+    if (tab.value === 'All') {
+      this.active = this.data;
+    } else {
+      this.active = this.data?.filter((d) => d.platform === tab.value);
+    }
+  }
+
   configureTabs(departures: NMBSDeparture[]) {
-    const platforms = [
-      ...new Set(departures.map((dep) => dep.platform)),
-    ].sort();
     this.tabs = [
-      { name: 'All', data: departures },
-      ...platforms.map((platform) => ({
-        name: platform,
-        data: departures.filter((dep) => dep.platform === platform),
-      })),
+      { label: 'All', value: 'All' },
+      ...[...new Set(departures.map((dep) => dep.platform))]
+        .sort()
+        .map((p) => ({
+          label: p,
+          value: p,
+        })),
     ];
+    this.tabChange(this.tabs[0]);
   }
 
   saveStationClick() {

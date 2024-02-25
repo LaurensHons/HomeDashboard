@@ -1,32 +1,43 @@
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .maincontent {
-  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
 }
 
 .nmbs {
   display: grid;
   grid-template-columns: 300px 1fr;
   width: 100%;
-  height: 300px;
+  gap: 10px;
 }
 .select {
-  border: 1px solid black;
-  margin: 8px;
-  border-radius: 8px;
+  height: 100%;
 }
 
 .liveboard {
-  margin: 8px;
   min-width: 0;
 }
 
 .secondrow {
   display: grid;
   grid-template-columns: 256px 1fr;
+  width: 100%;
 }
 
 .progress {
   background-color: blue;
   display: block;
+}
+
+.bottomrow {
+  height: 310px;
 }
 
 ::ng-deep .p-progressbar {
