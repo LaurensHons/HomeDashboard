@@ -1,0 +1,81 @@
+<mat-form-field
+  (click)="focusUinput.emit()"
+  [appearance]="appearance"
+  class="d-block clickable hide-subscript full-width pdl-select mt-1 w-100 h-100"
+  [class.hide-subscript]="hideSubscript"
+>
+  <mat-label *ngIf="label" class="clickable">{{ label }}</mat-label>
+  <mat-select
+    [multiple]="multiple"
+    [formControl]="form"
+    (openedChange)="onOpened()"
+    (selectionChange)="onSelectionChange($event)"
+    (closed)="onClosed()"
+    [required]="required"
+    [panelClass]="panelClassName"
+  >
+    <input
+      *ngIf="!hideSearch"
+      #dropdownFilter
+      [formControl]="searchFormControl"
+      [placeholder]="placeholder || ''"
+      class="searchBar"
+      (keydown)="$event.stopPropagation()"
+      (keydown.arrowDown)="selectFirstOption()"
+    />
+    <button
+      *ngIf="multiple && selectAllButton"
+      mat-button
+      (click)="selectAll()"
+      class="w-100"
+    >
+      Select All
+    </button>
+    <div class="scrollbar">
+      <ng-container
+        *ngIf="additonalTemplate"
+        [ngTemplateOutlet]="additonalTemplate"
+      ></ng-container>
+
+      <mat-option
+        *ngFor="let option of filteredOptionsSelected | async"
+        [value]="option.id"
+        [style.height.px]="optionHeight"
+        [style.min-height]="'unset'"
+      >
+        <ng-container
+          *ngIf="optionTemplate; else showName"
+          [ngTemplateOutlet]="optionTemplate!"
+          [ngTemplateOutletContext]="option.obj"
+        ></ng-container>
+        <ng-template #showName>{{ option.name }}</ng-template>
+      </mat-option>
+      <mat-option
+        *ngFor="let option of filteredOptionsUnselected | async"
+        [value]="option.id"
+        [style.height.px]="optionHeight"
+        [style.min-height]="'unset'"
+      >
+        <ng-container
+          *ngIf="optionTemplate; else showName"
+          [ngTemplateOutlet]="optionTemplate!"
+          [ngTemplateOutletContext]="option.obj"
+        ></ng-container>
+        <ng-template #showName>{{ option.name }}</ng-template>
+      </mat-option>
+      <div *ngIf="(filteredOptions | async)?.length === 0" class="noResults">
+        {{ noResultsText }}
+      </div>
+    </div>
+  </mat-select>
+  <button
+    *ngIf="clearButton && form.value"
+    matSuffix
+    mat-icon-button
+    type="button"
+    aria-label="Clear"
+    (click)="form.setValue(null); $event.stopPropagation()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

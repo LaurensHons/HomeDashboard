@@ -1,0 +1,9 @@
+.titlebar {
+  display: flex;
+  flex-direction: row;
+
+  .title {
+    flex-grow: 1;
+    text-align: center;
+  }
+}
