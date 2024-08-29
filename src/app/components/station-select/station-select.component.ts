@@ -52,6 +52,7 @@ export class StationSelectComponent implements OnInit {
 
   saveFavorite(station: NMBSStation) {
     if (this.stations$.value.length === 0) return;
+    station.favorite = !station.favorite;
     const cookie = this.cookieService.get('favorites');
     let favorites: string[];
     try {
@@ -70,12 +71,14 @@ export class StationSelectComponent implements OnInit {
         )
       );
     }
-    console.log(this.favorites.value);
-    if (!this.favorites.value.some((fav) => fav.id === station.id)) {
+    if (station.favorite && !this.favorites.value.some((fav) => fav.id === station.id)) {
       this.favorites.next([...this.favorites.value, station]);
       this.writeFavorites();
+    } else if (!station.favorite){
+      this.favorites.next(this.favorites.value.filter(f => f.id == station.id));
+      this.writeFavorites();
     }
-    console.log('added favorite', this.favorites.value);
+    console.log('toggled favorite', this.favorites.value);
   }
 
   removeFavorite(station: NMBSStation) {

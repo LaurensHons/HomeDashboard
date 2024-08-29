@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { StateFacade } from '../../core/state/state.facade';
 import { CoreModule } from '../core.module';
 import { StationSelectComponent } from '../components/station-select/station-select.component';
@@ -21,16 +28,31 @@ import {
   animate,
 } from '@angular/animations';
 import { SafePipe } from '../pipes/safe.pipe';
+import { NmbsComponent } from '../components/nmbs/nmbs.component';
+import {
+  GridComponent,
+  Part,
+  PartPosition,
+} from '../components/grid/grid.component';
+import { CookieService } from 'ngx-cookie-service';
+import { Serializer } from '@angular/compiler';
+import {
+  DashboardSavedPartKey,
+  PartCookie,
+  PartCookieMapper,
+} from '../cookie.helpers';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CoreModule,
-    StationSelectComponent,
-    StationLiveboardComponent,
     BuienradarGraphComponent,
     SafePipe,
+    NmbsComponent,
+    GridComponent,
+    MatMenuModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -56,12 +78,7 @@ import { SafePipe } from '../pipes/safe.pipe';
     ]),
   ],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-  stations$ = this.fac.stations$;
-  activeNMBSSation: NMBSStation | undefined;
-
-  @ViewChild('stationSelect') stationSelect!: StationSelectComponent;
-
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   lon: number = 0;
   lat: number = 0;
 
@@ -73,8 +90,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
   reset = new Subject<void>();
 
   hover = false;
+  edit = false;
 
-  constructor(private fac: StateFacade) {}
+  parts: Part[] = [];
+
+  @ViewChild('buienradar') buienradar!: TemplateRef<HTMLElement>;
+  @ViewChild('buiengraph') buiengraph!: TemplateRef<HTMLElement>;
+  @ViewChild('nmbs') nmbs!: TemplateRef<HTMLElement>;
+
+  partTypeDict: {
+    [id: string]: { comp: TemplateRef<HTMLElement>; displayName: string };
+  } = {};
+
+  get partTypeDictList() {
+    return Object.keys(this.partTypeDict).map((d) => ({
+      ...this.partTypeDict[d],
+      name: d,
+    }));
+  }
+
+  InitPartTypeDict() {
+    this.partTypeDict = {
+      buienradar: { comp: this.buienradar, displayName: 'Buien Radar' },
+      buiengraph: { comp: this.buiengraph, displayName: 'Buien Graph' },
+      nmbs: { comp: this.nmbs, displayName: 'NMBS station viewer' },
+    };
+  }
+
+  constructor(private cookieService: CookieService) {}
+
+  ngAfterViewInit(): void {
+    this.InitPartTypeDict();
+    this.InitDashboardParts();
+  }
 
   ngOnInit(): void {
     navigator.geolocation.getCurrentPosition(
@@ -84,13 +132,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.lat = loc.coords.latitude;
       },
       function () {
-        alert('User not allowed');
+        alert('User did not allow geolocation');
       },
       { timeout: 10000 }
     );
 
     this.timeout
-      .pipe(takeUntil(this.destroy$), delay(1000))
+      .pipe(takeUntil(this.destroy$), delay(100000))
       .subscribe((delay) => {
         if (delay >= this.timeoutSeconds) {
           this.refresh.next();
@@ -113,19 +161,51 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return `https://image.buienradar.nl/2.0/image/single/RadarMapRainNL?height=256&width=256&renderBackground=True&renderBranding=False&renderText=True&lat=${this.lat}&lon=${this.lon}`;
   }
 
-  resetTimer() {}
+  InitDashboardParts() {
+    if (!this.cookieService.check(DashboardSavedPartKey))
+      this.InitDefaultParts();
+    else {
+      console.log('cookie found trying to load');
+      try {
+        const value = this.cookieService.get(DashboardSavedPartKey);
+        const cookies = JSON.parse(value) as PartCookie[];
+        this.parts = cookies.map(
+          (c) => new Part(c.name, this.partTypeDict[c.name].comp, c)
+        );
+      } catch (e: any) {
+        console.log('error during loading cookies', e);
+        this.InitDefaultParts();
+      }
+    }
+  }
+
+  InitDefaultParts() {
+    console.log('no cookies found, initing default config');
+    this.parts = [
+      new Part('nmbs', this.nmbs, { y: 2, width: 2, height: 2 }),
+      new Part('buienradar', this.buienradar, { y: 2, width: 2, height: 2 }),
+      new Part('buiengraph', this.buiengraph, {
+        x: 2,
+        y: 2,
+        width: 4,
+        height: 2,
+      }),
+    ];
+  }
 
   onProgressbarClick() {
     this.refresh.next();
-    this.resetTimer();
   }
 
-  onStationChange(station: NMBSStation) {
-    console.log(station);
+  addPart(name: string, template: TemplateRef<HTMLElement>, pos: PartPosition) {
+    this.parts = [...this.parts, new Part(name, template, pos)];
+    this.elementsChanged();
   }
 
-  saveStation(station: NMBSStation) {
-    this.stationSelect.saveFavorite(station);
+  elementsChanged() {
+    const cookies = this.parts.map((p) => PartCookieMapper(p));
+    this.cookieService.set(DashboardSavedPartKey, JSON.stringify(cookies));
+    console.log('saving cookies', cookies);
   }
 
   destroy$ = new Subject<void>();

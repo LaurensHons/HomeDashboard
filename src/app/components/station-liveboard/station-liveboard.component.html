@@ -4,9 +4,10 @@
     mat-icon-button
     *ngIf="station"
     class="favStationBtn"
+    [class]="station.favorite ? '' : 'material-symbols-outlined'"
     (click)="saveStationClick()"
   >
-    <mat-icon>star</mat-icon>
+    <mat-icon [slot]="">star</mat-icon>
   </button>
   <mat-spinner class="smallspinner" *ngIf="loadingLiveboard"></mat-spinner>
 </div>

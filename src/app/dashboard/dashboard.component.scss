@@ -1,5 +1,19 @@
+.main {
+  position: relative;
+}
 .maincontent {
   padding: 8px;
+}
+
+.clicktorefresh {
+  cursor: pointer;
+}
+
+.editbtn {
+  transform: scale(0.6);
+  position: absolute;
+  right: 0;
+  top: -12;
 }
 
 .nmbs {
