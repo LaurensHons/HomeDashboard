@@ -5,6 +5,7 @@ export class NMBSStation {
   locationX!: number;
   locationY!: number;
   standardname!: string;
+  favorite = false;
 
   constructor(partial: Partial<NMBSStation>) {
     Object.assign(this, partial);

@@ -12,7 +12,7 @@ import {
   providedIn: 'root',
 })
 export class BRFunctionsService {
-  baseUrl = 'http://gpsgadget.buienradar.nl/data/raintext';
+  baseUrl = 'https://gpsgadget.buienradar.nl/data/raintext';
 
   constructor(private httpClient: HttpClient) {}
 

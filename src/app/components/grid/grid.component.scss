@@ -1,0 +1,77 @@
+:host {
+  display: contents;
+}
+.page-grid {
+  display: grid;
+  align-items: center;
+  &.page-grid-edit {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .grid-item {
+    min-width: 0;
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+  }
+  .move-handle {
+    z-index: 9;
+    cursor: move;
+  }
+  .resize-handle {
+    background-color: #102940;
+    z-index: 101;
+    &.resize-horizontal {
+      cursor: ew-resize;
+      width: 3px;
+      height: 100%;
+    }
+    &.resize-vertical {
+      cursor: ns-resize;
+      height: 3px;
+      width: 100%;
+    }
+    &.resize-diagonal {
+      width: 8px;
+      height: 8px;
+      z-index: 11;
+      &.resize-diagonal {
+        &-ne {
+          cursor: nesw-resize;
+        }
+        &-nw {
+          cursor: nwse-resize;
+        }
+      }
+    }
+  }
+  .settings-button {
+    top: 4px;
+    right: 4px;
+    z-index: 12;
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    ::ng-deep .mdc-icon-button__ripple,
+    ::ng-deep .mat-mdc-button-ripple {
+      border-radius: 0;
+    }
+    ::ng-deep .mat-mdc-button-touch-target {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+.dragging {
+  border: 2px solid black;
+}
+
+.dragging-not-allowed {
+  border: 2px solid red;
+}
+
+@media screen and (max-width: 480px) {
+  .page-grid:not(.page-grid-edit) {
+    grid-template-columns: minmax(10rem, 1fr);
+  }
+}
