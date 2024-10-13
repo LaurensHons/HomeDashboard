@@ -108,8 +108,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.refreshService.refresh.next();
   }
 
-  elementsChanged() {
-    this.dashboard.partListChange();
+  elementsChanged(list: Part[]) {
+    this.dashboard.partList = list;
   }
 
   iframeScale(iframe: HTMLElement, parentDiv: HTMLElement) {

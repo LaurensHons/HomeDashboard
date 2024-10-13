@@ -561,7 +561,8 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   removePart(part: Part) {
-    this.elements = this.elements.filter((e) => e.id != part.id);
+    this.elements = this.elements.filter((e) => e.id !== part.id);
+    this.emitValueChanges();
   }
 
   ngOnDestroy(): void {

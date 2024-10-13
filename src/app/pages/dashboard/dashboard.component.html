@@ -31,7 +31,7 @@
     <app-grid
       [edit]="edit"
       [elements]="(dashboard.partListObserver | async) ?? []"
-      (elementsChanged)="elementsChanged()"
+      (elementsChanged)="elementsChanged($event)"
       [addMenu]="menu"
     >
     </app-grid>
