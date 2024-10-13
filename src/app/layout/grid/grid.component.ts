@@ -1,5 +1,5 @@
 import { CdkDragEnter, DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -11,6 +11,7 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
+  Type,
   ViewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { debounceTime, first, takeUntil } from 'rxjs';
 import { v4 } from 'uuid';
 import { MatMenuModule, MatMenuPanel } from '@angular/material/menu';
+import { CardModule } from 'primeng/card';
+import { PartTypes } from '../../services/dashboard.service';
 
 enum ResizeDirection {
   Top = 'n',
@@ -31,39 +34,21 @@ enum ResizeDirection {
 }
 
 export class Part {
-  name!: string;
-  pos!: PartPosition;
-  template!: TemplateRef<HTMLElement>;
-  constructor(
-    name: string,
-    template: TemplateRef<HTMLElement>,
-    dimensions?: {
-      id?: string;
-      x?: number;
-      y?: number;
-      width?: number;
-      height?: number;
-    }
-  ) {
-    this.name = name;
-    this.template = template;
-    this.pos = new PartPosition({
-      id: dimensions?.id ?? v4(),
-      x: dimensions?.x ?? 0,
-      y: dimensions?.y ?? 0,
-      width: dimensions?.width ?? 1,
-      height: dimensions?.height ?? 1,
-    });
-  }
-}
-export class PartPosition {
   id!: string;
+  typeName!: string;
+  private _type!: Type<any>;
+
+  get type() {
+    if (this._type) return this._type;
+    return PartTypes()[this.typeName].type;
+  }
+
   x!: number;
   y!: number;
   width!: number;
   height!: number;
-  constructor(x: Partial<PartPosition>) {
-    Object.assign(this, x);
+  constructor(obj: Partial<Part>) {
+    Object.assign(this, obj);
   }
 }
 
@@ -76,6 +61,8 @@ export class PartPosition {
     DragDropModule,
     MatButtonModule,
     MatMenuModule,
+    NgComponentOutlet,
+    CardModule,
   ],
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
@@ -98,14 +85,14 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   blockSize = 0;
   rowHeight = 'auto';
 
-  dragging: PartPosition | null = null;
+  dragging: Part | null = null;
   canPlace = true;
 
   private resizeObserver?: ResizeObserver;
 
   rowCount = 0;
 
-  PartPosTrackBy = (_index: number, item: Part) => item.pos.id;
+  PartPosTrackBy = (_index: number, item: Part) => item.id;
   indexTrackBy = (index: number) => index;
 
   ResizeDirection = ResizeDirection;
@@ -154,38 +141,9 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   adjustMaxRows() {
     this.rowCount = Math.max(
-      ...this.elements.map((w) => w.pos.y + w.pos.height + 5),
+      ...this.elements.map((w) => w.y + w.height + 5),
       20
     );
-  }
-
-  ListenToDrag(dragEnter: CdkDragEnter) {
-    dragEnter.item.moved
-      .pipe(takeUntil(dragEnter.item.ended), debounceTime(20))
-      .subscribe((event) => {
-        const mouseCell = this.MouseToGridCoordinates(event.event);
-        if (mouseCell.x > this.columnAmount - 1)
-          mouseCell.x = this.columnAmount - 1;
-        if (mouseCell.x < 0) mouseCell.x = 0;
-        if (mouseCell.y > this.rowCount - 1) mouseCell.y = this.rowCount - 1;
-        if (mouseCell.y < 0) mouseCell.y = 0;
-        this.dragging = {
-          id: '',
-          x: mouseCell.x,
-          y: mouseCell.y,
-          height: 1,
-          width: 3,
-        };
-        this.canPlace = !this.checkOverlapping(this.dragging);
-      });
-
-    dragEnter.item.ended.pipe(first()).subscribe((event) => {
-      const mouseevent = event.event;
-      const canPlace = !this.checkOverlapping(this.dragging!);
-      if (!canPlace) return;
-      const mouseCell = this.MouseToGridCoordinates(mouseevent);
-      this.dragging = null;
-    });
   }
 
   MouseToGridCoordinates(event: MouseEvent | TouchEvent) {
@@ -207,34 +165,28 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   calculatePartGridAreas() {
-    const partPositions: {
-      name: string;
-      pos: PartPosition;
-      template: TemplateRef<HTMLElement>;
-    }[] = [];
+    const partPositions: Part[] = [];
     // First we sort the web parts so that from top left to bottom right
     const webparts = [...this.elements].sort((wp1, wp2) => {
-      if (wp1.pos.y === wp2.pos.y) return wp1.pos.x - wp2.pos.x;
-      return wp1.pos.y - wp2.pos.y;
+      if (wp1.y === wp2.y) return wp1.x - wp2.x;
+      return wp1.y - wp2.y;
     });
     // Then we calculate the grid areas for each web part based on the grid size, moving and resizing webparts when necessary
     webparts.forEach((w) => {
       const pos = w;
       if (!this.edit && this.columnAmount == 1) {
-        pos.pos.x = 1;
-        pos.pos.width = 1;
+        pos.x = 1;
+        pos.width = 1;
         // Find first open spot for the webpart from top left
         let openY = 1;
         while (
           partPositions.some(
-            (wp) =>
-              wp.pos.y < openY + pos.pos.height &&
-              wp.pos.y + wp.pos.height > openY
+            (wp) => wp.y < openY + pos.height && wp.y + wp.height > openY
           )
         ) {
           openY++;
         }
-        pos.pos.y = openY;
+        pos.y = openY;
       }
       partPositions.push(pos);
     });
@@ -254,25 +206,26 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
   */
 
-  public checkOverlapping(p: PartPosition) {
+  public checkOverlapping(p: {
+    id: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+  }) {
     return this.elements.some(
       (w) =>
-        w.pos.id !== p.id &&
-        w.pos.x < p.x + p.width &&
-        w.pos.x + w.pos.width > p.x &&
-        w.pos.y < p.y + p.height &&
-        w.pos.y + w.pos.height > p.y
+        w.id !== p.id &&
+        w.x < p.x + p.width &&
+        w.x + w.width > p.x &&
+        w.y < p.y + p.height &&
+        w.y + w.height > p.y
     );
   }
 
   resizePart = (event: MouseEvent | TouchEvent) => {
     if (this.pageGrid && this.editingPart) {
-      const resizingPartPosition = {
-        x: this.editingPart.pos.x,
-        y: this.editingPart.pos.y,
-        width: this.editingPart.pos.width,
-        height: this.editingPart.pos.height,
-      };
+      const resizingPartPosition = this.editingPart;
 
       const mouseCell = this.MouseToGridCoordinates(event);
 
@@ -387,23 +340,24 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
       }
       if (
         !this.checkOverlapping({
-          id: this.editingPart!.pos.id,
-          ...resizingPartPosition,
+          id: this.editingPart!.id,
+          height: resizingPartPosition.height,
+          width: resizingPartPosition.width,
+          x: resizingPartPosition.x,
+          y: resizingPartPosition.y,
         })
       ) {
-        this.editingPart!.pos.x = resizingPartPosition.x;
-        this.editingPart!.pos.y = resizingPartPosition.y;
-        this.editingPart!.pos.width = resizingPartPosition.width;
-        this.editingPart!.pos.height = resizingPartPosition.height;
+        this.editingPart!.x = resizingPartPosition.x;
+        this.editingPart!.y = resizingPartPosition.y;
+        this.editingPart!.width = resizingPartPosition.width;
+        this.editingPart!.height = resizingPartPosition.height;
 
-        const pos = this.elements.find(
-          (wp) => wp.pos.id === this.editingPart!.pos.id
-        );
+        const pos = this.elements.find((wp) => wp.id === this.editingPart!.id);
         if (pos) {
-          pos.pos.x = resizingPartPosition.x;
-          pos.pos.y = resizingPartPosition.y;
-          pos.pos.width = resizingPartPosition.width;
-          pos.pos.height = resizingPartPosition.height;
+          pos.x = resizingPartPosition.x;
+          pos.y = resizingPartPosition.y;
+          pos.width = resizingPartPosition.width;
+          pos.height = resizingPartPosition.height;
         }
       }
     }
@@ -416,7 +370,7 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
       document.removeEventListener('mousemove', this.resizePart);
       document.removeEventListener('mouseup', this.stopResizeWebPart);
     }
-    this.elementChanged.emit(this.editingPart!.name);
+    this.elementChanged.emit(this.editingPart!.id);
     this.editingPart = undefined;
     this.resizingDirection = undefined;
     this.lockedCursor = undefined;
@@ -476,8 +430,8 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (mouseCell.y > this.rowCount - 1) mouseCell.y = this.rowCount - 1;
       if (mouseCell.y < 0) mouseCell.y = 0;
       const webPart = this.editingPart!;
-      const width = webPart.pos.width;
-      const height = webPart.pos.height;
+      const width = webPart.width;
+      const height = webPart.height;
       const x = mouseCell.x - this.moveRelativeCell!.x;
       const y = mouseCell.y - this.moveRelativeCell!.y;
       if (
@@ -486,19 +440,19 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
         y >= 0 &&
         y <= this.rowCount - height &&
         !this.checkOverlapping({
-          id: webPart.pos.id,
+          id: webPart.id,
           x,
           y,
           width,
           height,
         })
       ) {
-        webPart.pos.x = x;
-        webPart.pos.y = y;
-        const pos = this.elements.find((wp) => wp.pos.id === webPart.pos.id);
+        webPart.x = x;
+        webPart.y = y;
+        const pos = this.elements.find((wp) => wp.id === webPart.id);
         if (pos) {
-          pos.pos.x = x;
-          pos.pos.y = y;
+          pos.x = x;
+          pos.y = y;
         }
       }
     }
@@ -512,7 +466,7 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
       document.removeEventListener('mousemove', this.moveWebPart);
       document.removeEventListener('mouseup', this.stopMoveWebPart);
     }
-    this.elementChanged.emit(this.editingPart!.name);
+    this.elementChanged.emit(this.editingPart!.id);
     this.editingPart = undefined;
     this.moveRelativeCell = undefined;
     this.lockedCursor = undefined;
@@ -530,12 +484,12 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
     event.preventDefault();
     this.editingPart = webPart;
     this.selectedPart = webPart;
-    this.focusChange.emit(webPart.name);
+    this.focusChange.emit(webPart.id);
     const mouseCell = this.MouseToGridCoordinates(event);
 
     this.moveRelativeCell = {
-      x: mouseCell.x - webPart.pos.x,
-      y: mouseCell.y - webPart.pos.y,
+      x: mouseCell.x - webPart.x,
+      y: mouseCell.y - webPart.y,
     };
     this.lockedCursor = 'grabbing';
     if (event instanceof TouchEvent) {
@@ -557,12 +511,12 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
     event.preventDefault();
     this.editingPart = webPart;
     this.selectedPart = webPart;
-    this.focusChange.emit(webPart.name);
+    this.focusChange.emit(webPart.id);
     const mouseCell = this.MouseToGridCoordinates(event);
 
     this.moveRelativeCell = {
-      x: mouseCell.x - webPart.pos.x,
-      y: mouseCell.y - webPart.pos.y,
+      x: mouseCell.x - webPart.x,
+      y: mouseCell.y - webPart.y,
     };
     this.lockedCursor = 'grabbing';
     if (event instanceof TouchEvent) {
@@ -604,6 +558,10 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
       this.resizeObserver.observe(this.pageGrid.nativeElement);
     }
+  }
+
+  removePart(part: Part) {
+    this.elements = this.elements.filter((e) => e.id != part.id);
   }
 
   ngOnDestroy(): void {

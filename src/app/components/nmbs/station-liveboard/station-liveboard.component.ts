@@ -11,9 +11,9 @@ import {
   NMBSDeparture,
   NMBSStation,
   NMBSStop,
-} from '../../../core/models/nmbs.models';
-import { CoreModule } from '../../core.module';
-import { NMBSFunctionsService } from '../../../core/services/nmbs.functions.service';
+} from '../../../../core/models/nmbs.models';
+import { CoreModule } from '../../../core.module';
+import { NMBSFunctionsService } from '../../../../core/services/nmbs.functions.service';
 import { catchError, first, of } from 'rxjs';
 import { LineTimelineComponent } from './line-timeline/line-timeline.component';
 

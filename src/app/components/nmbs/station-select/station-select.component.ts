@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { StateFacade } from '../../../core/state/state.facade';
-import { CoreModule } from '../../core.module';
-import { SelectComponent } from '../general/select/select.component';
-import { NMBSStation } from '../../../core/models/nmbs.models';
+import { StateFacade } from '../../../../core/state/state.facade';
+import { CoreModule } from '../../../core.module';
+import { SelectComponent } from '../../../layout/select/select.component';
+import { NMBSStation } from '../../../../core/models/nmbs.models';
 import { BehaviorSubject, Subject, first } from 'rxjs';
-import { NMBSFunctionsService } from '../../../core/services/nmbs.functions.service';
+import { NMBSFunctionsService } from '../../../../core/services/nmbs.functions.service';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -71,11 +71,16 @@ export class StationSelectComponent implements OnInit {
         )
       );
     }
-    if (station.favorite && !this.favorites.value.some((fav) => fav.id === station.id)) {
+    if (
+      station.favorite &&
+      !this.favorites.value.some((fav) => fav.id === station.id)
+    ) {
       this.favorites.next([...this.favorites.value, station]);
       this.writeFavorites();
-    } else if (!station.favorite){
-      this.favorites.next(this.favorites.value.filter(f => f.id == station.id));
+    } else if (!station.favorite) {
+      this.favorites.next(
+        this.favorites.value.filter((f) => f.id == station.id)
+      );
       this.writeFavorites();
     }
     console.log('toggled favorite', this.favorites.value);

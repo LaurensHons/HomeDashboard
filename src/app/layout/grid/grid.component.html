@@ -2,7 +2,6 @@
   class="min-height-0 min-width-0 h-100 w-100 overflow-auto scrollbar horizontal-scrollbar flex-grow-1"
   #scrollContainer
   cdkDropList
-  (cdkDropListEntered)="ListenToDrag($event)"
   [style.user-select]="edit ? 'none' : 'auto'"
 >
   <div
@@ -60,10 +59,10 @@
         class="position-relative grid-item"
         [class]="cellClass"
         [style.opacity]="edit ? '0.8' : '1'"
-        [style.grid-row-start]="part.pos.y + 1"
-        [style.grid-row-end]="part.pos.height + part.pos.y + 1"
-        [style.grid-column-start]="part.pos.x + 1"
-        [style.grid-column-end]="part.pos.width + part.pos.x + 1"
+        [style.grid-row-start]="part.y + 1"
+        [style.grid-row-end]="part.height + part.y + 1"
+        [style.grid-column-start]="part.x + 1"
+        [style.grid-column-end]="part.width + part.x + 1"
         [style.background]="edit ? 'white' : 'none'"
       >
         <ng-container *ngIf="edit">
@@ -92,7 +91,7 @@
             (touchstart)="startResizePart(part, ResizeDirection.Right, $event)"
           ></div>
           <div
-            *ngIf="(focusChange | async) == part.name"
+            *ngIf="(focusChange | async) == part.id"
             class="position-absolute resize-handle resize-diagonal resize-diagonal-nw"
             [style.top.px]="-2"
             [style.left.px]="-2"
@@ -102,7 +101,7 @@
             "
           ></div>
           <div
-            *ngIf="(focusChange | async) == part.name"
+            *ngIf="(focusChange | async) == part.id"
             class="position-absolute resize-handle resize-diagonal resize-diagonal-ne"
             [style.top.px]="-2"
             [style.right.px]="-2"
@@ -114,7 +113,7 @@
             "
           ></div>
           <div
-            *ngIf="(focusChange | async) == part.name"
+            *ngIf="(focusChange | async) == part.id"
             class="position-absolute resize-handle resize-diagonal resize-diagonal-ne"
             [style.bottom.px]="-2"
             [style.left.px]="-2"
@@ -126,7 +125,7 @@
             "
           ></div>
           <div
-            *ngIf="(focusChange | async) == part.name"
+            *ngIf="(focusChange | async) == part.id"
             class="position-absolute resize-handle resize-diagonal resize-diagonal-nw"
             [style.bottom.px]="-2"
             [style.right.px]="-2"
@@ -143,16 +142,28 @@
             (touchstart)="startMoveWebPart(part, $event)"
           ></div>
         </ng-container>
-        <ng-template
-          *ngIf="part.template; else addbtn"
-          [ngTemplateOutlet]="part.template"
-        ></ng-template>
+
+        <ng-container *ngIf="part.type; else addbtn">
+          <p-card class="w-100 h-100">
+            <ng-container *ngComponentOutlet="part.type" />
+          </p-card>
+        </ng-container>
+
+        <button
+          *ngIf="edit"
+          mat-button
+          (click)="removePart(part)"
+          class="editbtn"
+        >
+          <mat-icon class="m-0">delete</mat-icon>
+        </button>
+
         <ng-template #addbtn>
           <div>
             <button
               mat-button
               [matMenuTriggerFor]="addMenu"
-              [matMenuTriggerData]="{ pos: part.pos }"
+              [matMenuTriggerData]="{ pos: part }"
             >
               <mat-icon>plus</mat-icon>
             </button>

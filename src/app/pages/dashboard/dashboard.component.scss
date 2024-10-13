@@ -1,5 +1,34 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  height: 40px;
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  align-items: center;
+  .endbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    .editbtn {
+      width: 40px;
+      min-width: 40px;
+    }
+  }
+}
+
 .main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   position: relative;
+  overflow-y: auto;
+  .grid {
+    flex-grow: 1;
+  }
 }
 .maincontent {
   padding: 8px;
@@ -7,13 +36,6 @@
 
 .clicktorefresh {
   cursor: pointer;
-}
-
-.editbtn {
-  transform: scale(0.6);
-  position: absolute;
-  right: 0;
-  top: -12;
 }
 
 .nmbs {
@@ -64,4 +86,19 @@
 
 ::ng-deep .p-progressbar-value {
   overflow: visible;
+}
+.mat-mdc-card {
+  height: 100%;
+  width: 100%;
+}
+
+.tilecontent {
+  height: 100%;
+  width: 100%;
+  padding: 4px;
+}
+
+.buiendash {
+  height: 264px;
+  width: 264px;
 }

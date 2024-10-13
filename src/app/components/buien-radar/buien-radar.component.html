@@ -1,0 +1,12 @@
+<iframe
+  *ngIf="dashboard.userSessionSettings.lon && dashboard.userSessionSettings.lat"
+  [src]="buienradarIframe | safe : 'resourceUrl'"
+  style="height: 100%; width: 100%; padding: 3px"
+  NORESIZE
+  SCROLLING="NO"
+  HSPACE="0"
+  VSPACE="0"
+  FRAMEBORDER="0"
+  MARGINHEIGHT="0"
+  MARGINWIDTH="0"
+></iframe>

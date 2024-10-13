@@ -1,5 +1,7 @@
 import {
   Component,
+  inject,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -8,8 +10,10 @@ import {
 } from '@angular/core';
 import { CoreModule } from '../../core.module';
 import { BRFunctionsService } from '../../../core/services/buienradar.functions.service';
-import { Subject, first, takeUntil } from 'rxjs';
+import { Subject, first, merge, takeUntil, zip } from 'rxjs';
 import { ChartData, ChartOptions } from 'chart.js';
+import { RefreshService } from '../../services/refresh.service';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-buienradar-graph',
@@ -18,12 +22,12 @@ import { ChartData, ChartOptions } from 'chart.js';
   templateUrl: './buienradar-graph.component.html',
   styleUrl: './buienradar-graph.component.scss',
 })
-export class BuienradarGraphComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() lat!: number;
-  @Input() lon!: number;
-  @Input() refreshObservable: Subject<void> | undefined;
-
+export class BuienradarGraphComponent implements OnInit, OnDestroy {
   data: ChartData | undefined;
+
+  dashboard = inject(DashboardService) as DashboardService;
+  refresh = inject(RefreshService) as RefreshService;
+  BRFunc = inject(BRFunctionsService) as BRFunctionsService;
 
   options: ChartOptions = {
     responsive: true,
@@ -57,23 +61,15 @@ export class BuienradarGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   loading = false;
 
-  constructor(private BRFunc: BRFunctionsService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    const hasChanges = (key: string) =>
-      (changes[key] &&
-        changes[key].currentValue !== changes[key].previousValue) ||
-      changes[key].isFirstChange();
-    if (hasChanges('lat') || hasChanges('lon')) {
-      this.getRadarData();
-    }
-  }
+  constructor() {}
 
   getRadarData() {
-    if (!this.lat && !this.lon) return;
+    const pos: { lon: number; lat: number } =
+      this.dashboard.userSessionSettings;
+    if (!pos.lat && !pos.lon) return;
     if (this.loading) return;
     this.loading = true;
-    this.BRFunc.getRadarInfo(this.lat, this.lon)
+    this.BRFunc.getRadarInfo(pos.lat, pos.lon)
       .pipe(first())
       .subscribe((data) => {
         const splits = (data as string).split('\n');
@@ -107,8 +103,13 @@ export class BuienradarGraphComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.refreshObservable
-      ?.pipe(takeUntil(this.destroy$))
+    this.getRadarData();
+    this.refresh.refresh
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.getRadarData());
+
+    this.dashboard.userSessionSettingChange
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.getRadarData());
   }
   destroy$ = new Subject<void>();

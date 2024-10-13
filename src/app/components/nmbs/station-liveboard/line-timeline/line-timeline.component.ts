@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { NMBSStop } from '../../../../core/models/nmbs.models';
-import { CoreModule } from '../../../core.module';
+import { NMBSStop } from '../../../../../core/models/nmbs.models';
+import { CoreModule } from '../../../../core.module';
 
 @Component({
   selector: 'app-line-timeline',
