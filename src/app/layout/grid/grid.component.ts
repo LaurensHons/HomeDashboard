@@ -1,4 +1,5 @@
-import { CdkDragEnter, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ComponentType } from '@angular/cdk/portal';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import {
   AfterViewInit,
@@ -10,17 +11,15 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
-  TemplateRef,
-  Type,
   ViewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { debounceTime, first, takeUntil } from 'rxjs';
-import { v4 } from 'uuid';
 import { MatMenuModule, MatMenuPanel } from '@angular/material/menu';
 import { CardModule } from 'primeng/card';
-import { PartTypes } from '../../services/dashboard.service';
+import { AbstractComponent } from '../../components/abstract.component';
+import { PartType, PartTypes } from '../../pages/dashboard/part.types';
+import { Part } from './part.model';
 
 enum ResizeDirection {
   Top = 'n',
@@ -31,25 +30,6 @@ enum ResizeDirection {
   BottomLeft = 'sw',
   Left = 'w',
   TopLeft = 'nw',
-}
-
-export class Part {
-  id!: string;
-  typeName!: string;
-  private _type!: Type<any>;
-
-  get type() {
-    if (this._type) return this._type;
-    return PartTypes()[this.typeName].type;
-  }
-
-  x!: number;
-  y!: number;
-  width!: number;
-  height!: number;
-  constructor(obj: Partial<Part>) {
-    Object.assign(this, obj);
-  }
 }
 
 @Component({
@@ -79,6 +59,7 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() elementsChanged = new EventEmitter<Part[]>();
   @Output() elementChanged = new EventEmitter<string>();
   @Output() focusChange = new EventEmitter<string>();
+  @Output() editPart = new EventEmitter<Part>();
 
   @ViewChild('pageGrid') pageGrid?: ElementRef<HTMLElement>;
 
@@ -563,6 +544,14 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   removePart(part: Part) {
     this.elements = this.elements.filter((e) => e.id !== part.id);
     this.emitValueChanges();
+  }
+
+  canEdit(partName: string) {
+    return PartTypes()[partName as PartType].configType != undefined;
+  }
+
+  openPartSettings(part: Part) {
+    this.editPart.emit(part);
   }
 
   ngOnDestroy(): void {

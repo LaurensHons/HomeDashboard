@@ -1,0 +1,17 @@
+<div [formGroup]="formGroup">
+  <mat-checkbox
+    formControlName="automaticLocationEnabled"
+    (change)="resetLonLat()"
+    >Automatic Location from browser</mat-checkbox
+  >
+
+  <div *ngIf="!IsautomaticLocationEnabled">
+    <mat-form-field>
+      <input matInput placeholder="lat" formControlName="lon" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="lat" formControlName="lat" />
+    </mat-form-field>
+  </div>
+</div>

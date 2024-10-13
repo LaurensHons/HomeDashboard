@@ -14,6 +14,7 @@ import { Subject, first, merge, takeUntil, zip } from 'rxjs';
 import { ChartData, ChartOptions } from 'chart.js';
 import { RefreshService } from '../../services/refresh.service';
 import { DashboardService } from '../../services/dashboard.service';
+import { AbstractComponent } from '../abstract.component';
 
 @Component({
   selector: 'app-buienradar-graph',
@@ -22,7 +23,10 @@ import { DashboardService } from '../../services/dashboard.service';
   templateUrl: './buienradar-graph.component.html',
   styleUrl: './buienradar-graph.component.scss',
 })
-export class BuienradarGraphComponent implements OnInit, OnDestroy {
+export class BuienradarGraphComponent
+  extends AbstractComponent
+  implements OnInit, OnDestroy
+{
   data: ChartData | undefined;
 
   dashboard = inject(DashboardService) as DashboardService;
@@ -61,7 +65,9 @@ export class BuienradarGraphComponent implements OnInit, OnDestroy {
 
   loading = false;
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   getRadarData() {
     const pos: { lon: number; lat: number } =

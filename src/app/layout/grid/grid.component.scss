@@ -88,11 +88,17 @@
     }
   }
 }
-.editbtn {
+.btn {
   width: 40px;
   min-width: 40px;
   position: absolute;
+  z-index: 100;
+}
+.deletebtn {
   top: 4px;
   right: 4px;
-  z-index: 100;
+}
+.editbtn {
+  top: 4px;
+  left: 4px;
 }

@@ -33,6 +33,7 @@
       [elements]="(dashboard.partListObserver | async) ?? []"
       (elementsChanged)="elementsChanged($event)"
       [addMenu]="menu"
+      (editPart)="openEditMenu($event)"
     >
     </app-grid>
   </div>

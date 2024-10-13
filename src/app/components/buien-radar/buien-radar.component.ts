@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CoreModule } from '../../core.module';
 import { SafePipe } from '../../pipes/safe.pipe';
 import { DashboardService } from '../../services/dashboard.service';
+import { AbstractComponent } from '../abstract.component';
+import { BuienRadarConfigComponent } from './buien-radar-config/buien-radar-config.component';
 
 @Component({
   selector: 'app-buien-radar',

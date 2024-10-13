@@ -1,0 +1,21 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  height: 40px;
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  align-items: center;
+  .endbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    .editbtn {
+      width: 40px;
+      min-width: 40px;
+    }
+  }
+}

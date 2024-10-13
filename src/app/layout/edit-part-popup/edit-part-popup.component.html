@@ -1,0 +1,20 @@
+<div class="topbar">
+  <div></div>
+  <h5 class="text-center m-0">{{ types[part.typeName].displayName }} Config</h5>
+  <div class="endbar">
+    <button mat-button class="editbtn" (click)="close()">
+      <mat-icon class="m-0">close</mat-icon>
+    </button>
+    <button mat-button class="editbtn" (click)="save()">
+      <mat-icon class="m-0">save</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="flex-grow-1 p-2">
+  <ng-container
+    *ngComponentOutlet="
+      types[part.typeName].configType!;
+      inputs: { formGroup: formGroup }
+    "
+  />
+</div>

@@ -153,9 +153,18 @@
           *ngIf="edit"
           mat-button
           (click)="removePart(part)"
-          class="editbtn"
+          class="btn deletebtn"
         >
           <mat-icon class="m-0">delete</mat-icon>
+        </button>
+
+        <button
+          *ngIf="edit && canEdit(part.typeName)"
+          (click)="openPartSettings(part)"
+          mat-button
+          class="btn editbtn"
+        >
+          <mat-icon class="m-0">edit</mat-icon>
         </button>
 
         <ng-template #addbtn>

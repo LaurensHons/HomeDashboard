@@ -1,40 +1,8 @@
-import { Injectable, TemplateRef, Type } from '@angular/core';
-import { BehaviorSubject, filter, map, Observable, Subject } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
-import {
-  CookieDefaults,
-  CookieKey,
-  PartCookie,
-  PartCookieMapper,
-} from './cookie.helpers';
-import { BuienradarGraphComponent } from '../components/buienradar-graph/buienradar-graph.component';
-import { NmbsComponent } from '../components/nmbs/nmbs.component';
-import { BuienRadarComponent } from '../components/buien-radar/buien-radar.component';
-import { Part } from '../layout/grid/grid.component';
-import { v4 } from 'uuid';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, filter, Observable, Subject } from 'rxjs';
+import { CookieDefaults, CookieKey } from './cookie.helpers';
 import { CustomCookieService } from './cookie.service';
-
-export const PartTypes: () => {
-  [x: string]: {
-    displayName: string;
-    type: Type<any>;
-  };
-} = () => {
-  return {
-    buienradar: {
-      displayName: 'Buien Radar',
-      type: BuienRadarComponent,
-    },
-    buiengraph: {
-      displayName: 'Buien Graph',
-      type: BuienradarGraphComponent,
-    },
-    nmbs: {
-      displayName: 'NMBS station viewer',
-      type: NmbsComponent,
-    },
-  };
-};
+import { Part, PartCookie, PartCookieMapper } from '../layout/grid/part.model';
 
 @Injectable({
   providedIn: 'root',
@@ -80,7 +48,7 @@ export class DashboardService {
   }
 
   public initDefaultCookie() {
-    const value = this.cookieService.getKey(
+    const value = this.cookieService.getLocalstorage(
       CookieKey.DashboardSavedPartKey
     ) as PartCookie[];
     this.partList = value
@@ -93,7 +61,10 @@ export class DashboardService {
 
   private updateCookies(list: Part[]) {
     const cookies = list.map((p) => PartCookieMapper(p));
-    this.cookieService.setKey(CookieKey.DashboardSavedPartKey, cookies);
+    this.cookieService.setLocalstorage(
+      CookieKey.DashboardSavedPartKey,
+      cookies
+    );
     console.log('saving cookies', cookies);
   }
 }

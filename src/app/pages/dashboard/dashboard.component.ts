@@ -13,15 +13,19 @@ import { Subject } from 'rxjs';
 import { BuienradarGraphComponent } from '../../components/buienradar-graph/buienradar-graph.component';
 import { NmbsComponent } from '../../components/nmbs/nmbs.component';
 import { CoreModule } from '../../core.module';
-import { GridComponent, Part } from '../../layout/grid/grid.component';
+import { GridComponent } from '../../layout/grid/grid.component';
 import { SafePipe } from '../../pipes/safe.pipe';
-import { DashboardService, PartTypes } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { RefreshService } from '../../services/refresh.service';
 import { KeyValuePipe } from '@angular/common';
 import { v4 } from 'uuid';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomCookieService } from '../../services/cookie.service';
 import { CookieKey } from '../../services/cookie.helpers';
+import { PartType, PartTypes } from './part.types';
+import { MatDialog } from '@angular/material/dialog';
+import { Part } from '../../layout/grid/part.model';
+import { EditPartPopupComponent } from '../../layout/edit-part-popup/edit-part-popup.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -70,21 +74,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   partTypes = PartTypes();
 
-  get partTypeDictList() {
-    return Object.keys(PartTypes()).map((d) => ({
-      ...PartTypes()[d],
-      name: d,
-    }));
-  }
-
   isDarkMode!: boolean;
 
   constructor(
     private cookieService: CustomCookieService,
     public dashboard: DashboardService,
-    public refreshService: RefreshService
+    public refreshService: RefreshService,
+    private dialog: MatDialog
   ) {
-    this.setDarkMode(cookieService.getKey(CookieKey.DashboardDarkMode));
+    this.setDarkMode(cookieService.getCookie(CookieKey.DashboardDarkMode));
   }
 
   ngOnInit(): void {
@@ -121,28 +119,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   addPart(typeName: string) {
-    if (PartTypes()[typeName])
+    if (PartTypes()[typeName as PartType])
       this.dashboard.partList = [
         ...this.dashboard.partList,
         new Part({
           id: v4(),
-          typeName: typeName,
-          x: 1,
-          y: 1,
-          height: 1,
-          width: 1,
+          typeName: typeName as PartType,
+          x: 0,
+          y: 0,
+          height: 2,
+          width: 2,
         }),
       ];
   }
 
   setDarkMode(isDarkMode: boolean) {
     this.isDarkMode = isDarkMode;
-    this.cookieService.setKey(CookieKey.DashboardDarkMode, isDarkMode);
+    this.cookieService.setCookie(CookieKey.DashboardDarkMode, isDarkMode);
     if (isDarkMode) {
       document.body.classList.add('dark-theme');
     } else {
       document.body.classList.remove('dark-theme');
     }
+  }
+
+  openEditMenu(part: Part) {
+    if (!PartTypes()[part.typeName].configType) throw 'No config type found';
+    this.dialog.open(EditPartPopupComponent, {
+      data: part,
+      height: '40%',
+      width: '40%',
+    });
   }
 
   destroy$ = new Subject<void>();
