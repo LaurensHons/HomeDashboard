@@ -24,9 +24,9 @@ import { AbstractComponent } from '../abstract.component';
   styleUrl: './buienradar-graph.component.scss',
 })
 export class BuienradarGraphComponent
-  extends AbstractComponent
-  implements OnInit, OnDestroy
+  implements OnInit, OnDestroy, AbstractComponent
 {
+  @Input() config!: { [key: string]: any };
   data: ChartData | undefined;
 
   dashboard = inject(DashboardService) as DashboardService;
@@ -64,10 +64,6 @@ export class BuienradarGraphComponent
   };
 
   loading = false;
-
-  constructor() {
-    super();
-  }
 
   getRadarData() {
     const pos: { lon: number; lat: number } =

@@ -137,9 +137,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isDarkMode = isDarkMode;
     this.cookieService.setCookie(CookieKey.DashboardDarkMode, isDarkMode);
     if (isDarkMode) {
-      document.body.classList.add('dark-theme');
+      document.body.id = 'dark-theme';
     } else {
-      document.body.classList.remove('dark-theme');
+      document.body.id = '';
     }
   }
 
@@ -149,6 +149,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       data: part,
       height: '40%',
       width: '40%',
+      minHeight: '400px',
+      minWidth: '400px',
     });
   }
 

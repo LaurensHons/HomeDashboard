@@ -24,17 +24,14 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './buien-radar-config.component.scss',
 })
 export class BuienRadarConfigComponent
-  extends AbstractConfigComponent
-  implements OnInit
+  implements OnInit, AbstractConfigComponent
 {
   constructor(
     private dialogRef: MatDialogRef<BuienRadarConfigComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Part
-  ) {
-    super();
-  }
+  ) {}
 
-  @Input() override formGroup!: FormGroup;
+  @Input() formGroup!: FormGroup;
 
   get IsautomaticLocationEnabled(): boolean {
     return this.formGroup.value.automaticLocationEnabled;

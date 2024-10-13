@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, Subject } from 'rxjs';
 import { CookieDefaults, CookieKey } from './cookie.helpers';
 import { CustomCookieService } from './cookie.service';
 import { Part, PartCookie, PartCookieMapper } from '../layout/grid/part.model';
@@ -41,6 +41,10 @@ export class DashboardService {
     this._partList.next(this._partList.value);
   }
 
+  public getPartConfigObserver(id: string) {
+    return this._partList.pipe(map((l) => l?.find((p) => p.id === id)?.config));
+  }
+
   public setCoords(lon: number, lat: number) {
     this._userSessionSettings.lon = lon;
     this._userSessionSettings.lat = lat;
@@ -54,7 +58,6 @@ export class DashboardService {
     this.partList = value
       .map((c) => new Part({ ...c }))
       .filter((t) => t.typeName != null);
-    console.log('cookie: ' + value);
     if (this.partList.length == 0)
       this.partList = CookieDefaults[CookieKey.DashboardSavedPartKey];
   }

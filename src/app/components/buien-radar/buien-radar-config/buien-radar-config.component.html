@@ -5,13 +5,14 @@
     >Automatic Location from browser</mat-checkbox
   >
 
-  <div *ngIf="!IsautomaticLocationEnabled">
-    <mat-form-field>
-      <input matInput placeholder="lat" formControlName="lon" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="lat" formControlName="lat" />
-    </mat-form-field>
+  <div *ngIf="!IsautomaticLocationEnabled" class="d-flex flex-row gap-2 p-3">
+    <div class="d-flex flex-column">
+      <label htmlFor="lon">Latitude</label>
+      <input #lon pInputText placeholder="lon" formControlName="lon" />
+    </div>
+    <div class="d-flex flex-column">
+      <label htmlFor="lat">Longitude</label>
+      <input #lat pInputText placeholder="lat" formControlName="lat" />
+    </div>
   </div>
 </div>

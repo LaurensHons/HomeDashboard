@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { NMBSStation } from '../../../core/models/nmbs.models';
 import { StationSelectComponent } from './station-select/station-select.component';
 import { StateFacade } from '../../../core/state/state.facade';
@@ -13,15 +13,14 @@ import { AbstractComponent } from '../abstract.component';
   templateUrl: './nmbs.component.html',
   styleUrl: './nmbs.component.scss',
 })
-export class NmbsComponent extends AbstractComponent {
+export class NmbsComponent implements AbstractComponent {
   stations$ = this.fac.stations$;
   activeNMBSSation: NMBSStation | undefined;
 
+  @Input() config!: { [key: string]: any };
   @ViewChild('stationSelect') stationSelect!: StationSelectComponent;
 
-  constructor(private fac: StateFacade) {
-    super();
-  }
+  constructor(private fac: StateFacade) {}
 
   saveStation(station: NMBSStation) {
     this.stationSelect.saveFavorite(station);

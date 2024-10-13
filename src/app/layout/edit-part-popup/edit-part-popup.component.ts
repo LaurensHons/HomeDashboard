@@ -41,6 +41,7 @@ export class EditPartPopupComponent {
   }
 
   close() {
+    this.save();
     this.dialogRef.close();
   }
 }
