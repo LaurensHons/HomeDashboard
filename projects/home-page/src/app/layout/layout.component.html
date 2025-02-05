@@ -1,0 +1,55 @@
+<div class="topbar">
+  <div></div>
+  <h3 class="text-center m-0">Laurens Hons Homepage</h3>
+  <div class="endbar">
+    <button mat-button class="editbtn" (click)="setDarkMode(!isDarkMode)">
+      <mat-icon>{{ isDarkMode ? "wb_sunny" : "nights_stay" }}</mat-icon>
+    </button>
+    <button
+      mat-button
+      class="editbtn"
+      (click)="
+        appService.EditEventEmitter.next(!appService.EditEventEmitter.value)
+      "
+    >
+      <mat-icon class="m-0">edit</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="content">
+  <mat-sidenav-container autosize>
+    <mat-sidenav
+      [opened]="true"
+      [mode]="isMobile ? 'over' : 'side'"
+      [opened]="isMobile ? 'false' : 'true'"
+      [ngClass]="!isCollapsed ? 'expanded' : ''"
+      [mode]="isMobile ? 'over' : 'side'"
+      [opened]="isMobile ? 'false' : 'true'"
+    >
+      <button
+        mat-button
+        class="editbtn"
+        aria-label="Menu icon"
+        (click)="toggleMenu()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-nav-list>
+        <a
+          class="list-item"
+          *ngFor="let link of layoutService.sideBarLinks"
+          routerLinkActive
+          [routerLink]="link.routerLink!"
+        >
+          <mat-icon class="sidebaricon" *ngIf="link.icon">{{
+            link.icon
+          }}</mat-icon>
+          <span *ngIf="!isCollapsed">{{ link.displayName }}</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

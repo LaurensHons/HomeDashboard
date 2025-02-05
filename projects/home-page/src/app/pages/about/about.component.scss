@@ -1,0 +1,11 @@
+:host {
+  background-color: var(--abs-background-color);
+}
+
+.timelineEvent {
+  display: flex;
+  flex-direction: column;
+  .title {
+    font-weight: 600;
+  }
+}

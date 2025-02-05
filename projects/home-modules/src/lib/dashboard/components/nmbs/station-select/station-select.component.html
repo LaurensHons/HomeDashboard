@@ -1,0 +1,16 @@
+<p-autoComplete
+  [formControl]="station"
+  [suggestions]="filteredstations"
+  (completeMethod)="filter($event)"
+  [forceSelection]="true"
+  field="name"
+  class="nmbsautocomplete"
+></p-autoComplete>
+<div class="favorites">
+  <div *ngFor="let station of _favorites" class="station">
+    <span (click)="onStationChange(station)">{{ station?.name }}</span>
+    <button mat-button class="removebtn" (click)="removeFavorite(station)">
+      <mat-icon class="m-0">close</mat-icon>
+    </button>
+  </div>
+</div>

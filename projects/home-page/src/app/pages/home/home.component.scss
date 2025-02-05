@@ -1,0 +1,88 @@
+:host {
+  background-color: var(--abs-background-color);
+}
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  gap: 20px;
+  align-items: center;
+  max-width: 600px;
+  margin: auto;
+  background-color: var(--abs-background-color);
+}
+
+.textpanel p {
+  color: var(--text-color);
+}
+
+.titlepanel {
+  span {
+    color: var(--text-color);
+    font-weight: 600;
+  }
+}
+
+.panel {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: var(--off-background-color);
+  padding: 30px;
+}
+
+.apppannel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.linkdrawer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.linkdrawer a {
+  text-decoration: none;
+  color: lightblue;
+}
+
+.appdrawer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  --app-size: 200px;
+}
+
+.appitem {
+  width: var(--app-size);
+  height: var(--app-size);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px rgb(58, 56, 56) solid;
+  border-radius: 15px;
+  background-color: black;
+  box-shadow: rgba(165, 165, 165, 0.2) 0px 7px 29px 0px;
+}
+
+.appitem img {
+  max-width: calc(var(--app-size) - 10px);
+  max-height: calc(var(--app-size) - 10px);
+}
+
+a.link-div {
+  position: absolute;
+  display: block;
+  text-decoration: none;
+  width: var(--app-size);
+  height: var(--app-size);
+}

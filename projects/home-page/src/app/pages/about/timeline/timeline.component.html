@@ -1,0 +1,19 @@
+<div class="bg pt-4">
+  <p-timeline class="bg" [value]="timelineEvents">
+    <ng-template pTemplate="content" let-event>
+      <div class="bg timelineEvent">
+        <span class="title">{{ event.title }}</span>
+        <span class="description">
+          {{ event.description }}
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="opposite" let-event>
+      <div class="bg timelineEvent">
+        <span class="time" *ngIf="event.time">
+          {{ event.time }}
+        </span>
+      </div>
+    </ng-template>
+  </p-timeline>
+</div>
