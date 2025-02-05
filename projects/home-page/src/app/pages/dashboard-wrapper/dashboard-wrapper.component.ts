@@ -19,7 +19,6 @@ export class DashboardWrapperComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    console.log('init', this.dash);
     this.dash.initDefaultCookie();
   }
 

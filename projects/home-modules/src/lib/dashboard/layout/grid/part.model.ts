@@ -12,10 +12,10 @@ export class Part {
     return PartTypes()[this.typeName].type;
   }
 
-  x!: number;
-  y!: number;
-  width!: number;
-  height!: number;
+  x = 0;
+  y = 0;
+  width = 2;
+  height = 2;
 
   config!: { [key: string]: any };
 

@@ -9,3 +9,7 @@
     font-weight: 600;
   }
 }
+
+::ng-deep .tabgroup .mdc-tab__text-label {
+  color: var(--text-color) !important;
+}

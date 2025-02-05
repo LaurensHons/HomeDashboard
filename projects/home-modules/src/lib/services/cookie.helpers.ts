@@ -18,6 +18,7 @@ export const CookieDefaults: { [key in CookieKey]: any } = {
       id: v4(),
       typeName: PartType.buiengraph,
       x: 2,
+      y: 0,
       width: 4,
       height: 2,
     }),
@@ -25,8 +26,10 @@ export const CookieDefaults: { [key in CookieKey]: any } = {
     new Part({
       id: v4(),
       typeName: PartType.buienradar,
-      width: 4,
+      width: 2,
       height: 2,
+      x: 0,
+      y: 0,
     }),
   ],
 };

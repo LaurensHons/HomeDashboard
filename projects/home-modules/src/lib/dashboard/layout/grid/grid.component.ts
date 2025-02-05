@@ -121,7 +121,10 @@ export class GridComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   adjustMaxRows() {
-    this.rowCount = Math.max(...this.elements.map((w) => w.y + w.height + 5));
+    this.rowCount = Math.max(
+      ...this.elements.map((w) => w.y + w.height + 5),
+      10
+    );
   }
 
   MouseToGridCoordinates(event: MouseEvent | TouchEvent) {

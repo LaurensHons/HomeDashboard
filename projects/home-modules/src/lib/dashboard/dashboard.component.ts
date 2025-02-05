@@ -77,7 +77,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   lat: number = 0;
 
   hover = false;
-  @Input() edit = false;
+  edit = false;
 
   partTypes = PartTypes();
 

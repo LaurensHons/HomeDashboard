@@ -4,6 +4,4 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AppService {
-  EditEventEmitter = new BehaviorSubject(false);
-}
+export class AppService {}
