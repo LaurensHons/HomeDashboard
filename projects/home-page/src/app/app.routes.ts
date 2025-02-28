@@ -10,13 +10,14 @@ export const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'home',
-    component: HomeComponent,
-  },
-  {
     path: 'about',
     component: AboutComponent,
   },
+  {
+    path: 'home',
+    component: HomeComponent,
+  },
+
   {
     path: 'dashboard',
     component: DashboardWrapperComponent,

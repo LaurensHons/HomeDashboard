@@ -1,6 +1,7 @@
 <div class="content">
   <mat-sidenav-container autosize>
     <mat-sidenav
+      class="bgo"
       [opened]="true"
       [mode]="isMobile ? 'over' : 'side'"
       [opened]="isMobile ? 'false' : 'true'"
@@ -21,7 +22,7 @@
         <a
           class="list-item"
           *ngFor="let link of layoutService.sideBarLinks"
-          routerLinkActive
+          [routerLinkActive]="'active'"
           [routerLink]="link.routerLink!"
         >
           <mat-icon class="sidebaricon" *ngIf="link.icon">{{
@@ -32,7 +33,7 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-      <div class="topbar">
+      <div class="topbar bgo">
         <div>
           <button
             *ngIf="isMobile"
@@ -44,14 +45,16 @@
             <mat-icon>menu</mat-icon>
           </button>
         </div>
-        <h3 class="text-center m-0">Laurens Hons Homepage</h3>
+        <h3 class="text-center m-0 txt">Laurens Hons Homepage</h3>
         <div class="endbar">
           <button mat-button class="editbtn" (click)="setDarkMode(!isDarkMode)">
             <mat-icon>{{ isDarkMode ? "wb_sunny" : "nights_stay" }}</mat-icon>
           </button>
         </div>
       </div>
-      <ng-content></ng-content>
+      <div class="ngcontent bg">
+        <ng-content></ng-content>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

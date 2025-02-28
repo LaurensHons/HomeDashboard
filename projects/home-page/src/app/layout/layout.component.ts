@@ -51,7 +51,9 @@ export class LayoutComponent implements OnInit {
   isDarkMode!: boolean;
 
   ngOnInit() {
-    this.setDarkMode(this.cookieService.getCookie(CookieKey.DashboardDarkMode));
+    this.setDarkMode(
+      this.cookieService.getCookieObject<boolean>(CookieKey.DashboardDarkMode)
+    );
     this.observer.observe(['(max-width: 800px)']).subscribe((screenSize) => {
       if (screenSize.matches) {
         this.isMobile = true;
@@ -63,7 +65,7 @@ export class LayoutComponent implements OnInit {
 
   setDarkMode(isDarkMode: boolean) {
     this.isDarkMode = isDarkMode;
-    this.cookieService.setCookie(CookieKey.DashboardDarkMode, isDarkMode);
+    this.cookieService.setCookieObject(CookieKey.DashboardDarkMode, isDarkMode);
     if (isDarkMode) {
       document.body.id = 'dark-theme';
     } else {

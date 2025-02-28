@@ -56,9 +56,9 @@ export class DashboardService {
   }
 
   public initDefaultCookie() {
-    const value = this.cookieService.getLocalstorage(
+    const value = this.cookieService.getCookieObject<PartCookie[]>(
       CookieKey.DashboardSavedPartKey
-    ) as PartCookie[];
+    );
     this.partList = value
       .map((c) => new Part({ ...c }))
       .filter((t) => t.typeName != null);
@@ -68,7 +68,7 @@ export class DashboardService {
 
   private updateCookies(list: Part[]) {
     const cookies = list.map((p) => PartCookieMapper(p));
-    this.cookieService.setLocalstorage(
+    this.cookieService.setCookieObject(
       CookieKey.DashboardSavedPartKey,
       cookies
     );

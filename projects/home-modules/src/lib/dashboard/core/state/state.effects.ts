@@ -9,34 +9,48 @@ import {
   getNMBSStations,
   getNMBSStationsResolved,
 } from './state.actions';
+import { CustomCookieService } from '../../../services/cookie.service';
+import { LocalStorageKey } from '../../../services/cookie.helpers';
+import { NMBSStation } from '../models/nmbs.models';
+import { registry } from 'chart.js';
 
 @Injectable({ providedIn: 'root' })
 export class StateEffects {
   constructor(
     private actions$: Actions,
-    private nmbsFuncs: NMBSFunctionsService
+    private nmbsFuncs: NMBSFunctionsService,
+    private cookieService: CustomCookieService
   ) {}
 
   getStations: Observable<any> = createEffect(() =>
     this.actions$.pipe(
       ofType(getNMBSStations),
-      mergeMap(({ callback }) =>
-        this.nmbsFuncs.getAllStations().pipe(
+      mergeMap(({ callback }) => {
+        var cached = this.cookieService.getLocalStorage<NMBSStation[]>(
+          LocalStorageKey.DashboardNMBSSTATIONCACHE
+        );
+        if (cached && cached.length)
+          return of(getNMBSStationsResolved({ stations: cached }));
+        return this.nmbsFuncs.getAllStations().pipe(
           catchError((e) => {
             callback ? callback(false) : undefined;
             return of(undefined);
           }),
           tap(() => (callback ? callback(true) : undefined)),
-          switchMap((stations) =>
-            of(
+          switchMap((stations) => {
+            this.cookieService.setLocalStorage(
+              LocalStorageKey.DashboardNMBSSTATIONCACHE,
+              stations
+            );
+            return of(
               getNMBSStationsResolved({
                 stations: stations || [],
               })
-            )
-          ),
+            );
+          }),
           catchError((e) => [])
-        )
-      )
+        );
+      })
     )
   );
 

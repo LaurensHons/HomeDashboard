@@ -13,3 +13,6 @@
 ::ng-deep .tabgroup .mdc-tab__text-label {
   color: var(--text-color) !important;
 }
+::ng-deep .mat-mdc-tab-labels {
+  background-color: var(--off-background-color) !important;
+}

@@ -1,14 +1,14 @@
 <div class="nmbs">
-    <app-station-select
-      #stationSelect
-      [(activeStation)]="activeNMBSSation"
-      class="w-100 select"
-    >
-    </app-station-select>
+  <app-station-select
+    #stationSelect
+    [(activeStation)]="activeNMBSSation"
+    class="w-100 select"
+  >
+  </app-station-select>
 
-    <app-station-liveboard
-      class="liveboard"
-      [station]="activeNMBSSation"
-      (saveStation)="saveStation($event)"
-    ></app-station-liveboard>
-  </div>
+  <app-station-liveboard
+    class="liveboard"
+    [station]="activeNMBSSation"
+    (activeStationChange)="selectStation($event)"
+  ></app-station-liveboard>
+</div>

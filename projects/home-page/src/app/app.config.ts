@@ -7,6 +7,8 @@ import { StoreModule, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { componentFeatureKey, componentReducers } from 'home-modules';
+import { StateEffects } from '../../../home-modules/src/lib/dashboard/core/state/state.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [

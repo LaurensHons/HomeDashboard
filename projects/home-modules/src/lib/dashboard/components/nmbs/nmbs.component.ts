@@ -25,7 +25,7 @@ export class NmbsComponent implements AbstractComponent {
   @Input() config!: { [key: string]: any };
   @ViewChild('stationSelect') stationSelect!: StationSelectComponent;
 
-  saveStation(station: NMBSStation) {
-    this.stationSelect.saveFavorite(station);
+  selectStation(station: any) {
+    this.activeNMBSSation = station;
   }
 }

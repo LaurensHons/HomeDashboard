@@ -25,11 +25,12 @@ h2 {
   }
 }
 
-.content {
+.ngcontent {
   height: calc(100% - 40px);
-  mat-sidenav-container {
-    background-color: var(--abs-background-color);
-  }
+}
+
+.content {
+  height: 100%;
 }
 
 .editbtn {
@@ -38,6 +39,10 @@ h2 {
   mat-icon {
     margin: 0px;
   }
+}
+
+mat-sidenav {
+  border: none;
 }
 
 mat-sidenav-container {
@@ -62,8 +67,8 @@ mat-nav-list {
       margin: 10px;
     }
   }
-  .list-item.active {
-    background-color: lightblue;
+  .list-item.active mat-icon {
+    color: lightblue !important;
   }
 }
 

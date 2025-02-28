@@ -1,19 +1,22 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { StateFacade } from '../../../core/state/state.facade';
-import { CoreModule } from '../../../core.module';
-import { SelectComponent } from '../../../layout/select/select.component';
-import { NMBSStation } from '../../../core/models/nmbs.models';
-import { BehaviorSubject, Subject, first } from 'rxjs';
-import { NMBSFunctionsService } from '../../../core/services/nmbs.functions.service';
-import { CookieService } from 'ngx-cookie-service';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { CustomCookieService } from '../../../../services/cookie.service';
-import { CookieKey } from '../../../../services/cookie.helpers';
 import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
+import { Subject, takeUntil, withLatestFrom } from 'rxjs';
+import { CookieKey } from '../../../../services/cookie.helpers';
+import { CustomCookieService } from '../../../../services/cookie.service';
+import { CoreModule } from '../../../core.module';
+import { NMBSStation } from '../../../core/models/nmbs.models';
+import { StateFacade } from '../../../core/state/state.facade';
 
 @Component({
   selector: 'app-station-select',
@@ -22,30 +25,25 @@ import {
   templateUrl: './station-select.component.html',
   styleUrl: './station-select.component.scss',
 })
-export class StationSelectComponent implements OnInit {
+export class StationSelectComponent implements OnInit, OnDestroy {
   @Input() activeStation: NMBSStation | undefined;
   @Output() activeStationChange = new EventEmitter<NMBSStation>();
 
   stations: NMBSStation[] = [];
   filteredstations: NMBSStation[] = [];
 
-  station = new FormControl<string>('');
+  stationFilter = new FormControl<string>('');
 
   constructor(
-    private nmbsFunc: NMBSFunctionsService,
+    private fac: StateFacade,
     private cookieService: CustomCookieService
   ) {}
 
   _favorites: NMBSStation[] = [];
 
-  get favorites() {
-    return this._favorites;
-  }
-
-  set favorites(v) {
-    this.cookieService.setLocalstorage(
-      CookieKey.DashboardNMBSFAVORITES,
-      v.map((s) => s.id)
+  get storedStationFavorites() {
+    return this.cookieService.getCookieObject<string[]>(
+      CookieKey.DashboardNMBSFAVORITES
     );
   }
 
@@ -57,29 +55,31 @@ export class StationSelectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const stations = this.cookieService.getLocalstorage(
-      CookieKey.DashboardNMBSSTATIONCACHE
-    );
+    this.fac.getNMBSStations();
 
-    if (length != 0) this.initObservable(stations);
-    else
-      this.nmbsFunc
-        .getAllStations()
-        .pipe(first())
-        .subscribe((stations) => {
-          this.initObservable(stations);
-        });
-  }
+    this.fac.stations$
+      .pipe(
+        takeUntil(this.destroy$),
+        withLatestFrom(this.stationFilter.valueChanges)
+      )
+      .subscribe(([stations, filter]) => {
+        if (!filter) this.filteredstations = stations;
+        else
+          this.filteredstations = stations.filter(
+            (s) => s.name.indexOf(filter) != -1
+          );
+      });
 
-  private initObservable(stations: NMBSStation[]) {
-    const favorites = this.cookieService.getLocalstorage(
-      CookieKey.DashboardNMBSFAVORITES
-    );
-    this._favorites = favorites
-      .map((fav: string) => stations.find((s) => s.id === fav) as NMBSStation)
-      .filter((t: NMBSStation) => !!t);
-    this.stations = stations;
-    this.filteredstations = stations;
+    this.fac.stations$
+      .pipe(
+        takeUntil(this.destroy$),
+        withLatestFrom(
+          this.cookieService.observeCookie(CookieKey.DashboardNMBSFAVORITES)
+        )
+      )
+      .subscribe(([stations, favorite_ids]) => {
+        this._favorites = stations.filter((s) => favorite_ids?.includes(s.id));
+      });
   }
 
   onStationChange(station: NMBSStation) {
@@ -87,14 +87,20 @@ export class StationSelectComponent implements OnInit {
     this.activeStationChange.emit(station);
   }
 
-  saveFavorite(station: NMBSStation) {
-    this.favorites = [station, ...this.favorites];
-    this.onStationChange(station);
+  removeFavorite(station: NMBSStation) {
+    var favorite_ids = this.cookieService
+      .getCookieObject<string[]>(CookieKey.DashboardNMBSFAVORITES)
+      .filter((fav) => fav !== station.id);
+
+    this.cookieService.setCookieObject(
+      CookieKey.DashboardNMBSFAVORITES,
+      favorite_ids
+    );
   }
 
-  removeFavorite(station: NMBSStation) {
-    this.favorites = this.favorites.filter(
-      (fav: NMBSStation) => fav.id !== station.id
-    );
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

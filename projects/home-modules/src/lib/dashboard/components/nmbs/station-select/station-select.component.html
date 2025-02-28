@@ -1,9 +1,9 @@
 <p-autoComplete
-  [formControl]="station"
+  [formControl]="stationFilter"
   [suggestions]="filteredstations"
   (completeMethod)="filter($event)"
+  (onSelect)="onStationChange($event.value)"
   [forceSelection]="true"
-  field="name"
   class="nmbsautocomplete"
 ></p-autoComplete>
 <div class="favorites">

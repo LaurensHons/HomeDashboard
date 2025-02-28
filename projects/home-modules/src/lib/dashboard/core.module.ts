@@ -18,6 +18,8 @@ import { TimelineModule } from 'primeng/timeline';
 import { ChartModule } from 'primeng/chart';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { componentFeatureKey, componentReducers } from '../core.feature';
+import { StateEffects } from './core/state/state.effects';
 
 @NgModule({
   imports: [
