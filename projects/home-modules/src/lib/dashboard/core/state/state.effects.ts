@@ -1,7 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { LocalStorageKey } from '../../../services/cookie.helpers';
+import { CustomCookieService } from '../../../services/cookie.service';
+import { NMBSStation } from '../models/nmbs.models';
 import { NMBSFunctionsService } from '../services/nmbs.functions.service';
 import {
   getNMBSDepartures,
@@ -9,21 +12,19 @@ import {
   getNMBSStations,
   getNMBSStationsResolved,
 } from './state.actions';
-import { CustomCookieService } from '../../../services/cookie.service';
-import { LocalStorageKey } from '../../../services/cookie.helpers';
-import { NMBSStation } from '../models/nmbs.models';
-import { registry } from 'chart.js';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class StateEffects {
+  constructor() {}
+
   actions$ = inject(Actions);
-  constructor(
-    private nmbsFuncs: NMBSFunctionsService,
-    private cookieService: CustomCookieService
-  ) {}
+  cookieService = inject(CustomCookieService);
+  nmbsFuncs = inject(NMBSFunctionsService);
 
   getStations: Observable<any> = createEffect(() =>
-    this.actions$.pipe(
+    this.actions$?.pipe(
       ofType(getNMBSStations),
       mergeMap(({ callback }) => {
         var cached = this.cookieService.getLocalStorage<NMBSStation[]>(
@@ -55,7 +56,7 @@ export class StateEffects {
   );
 
   getLiveboard: Observable<any> = createEffect(() =>
-    this.actions$.pipe(
+    this.actions$?.pipe(
       ofType(getNMBSDepartures),
       mergeMap(({ stationId, callback }) =>
         this.nmbsFuncs.getDeparturesAndArrivals(stationId).pipe(

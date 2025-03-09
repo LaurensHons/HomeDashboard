@@ -91,7 +91,12 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/home-page/public"
+                "input": "src/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
               }
             ],
             "styles": ["projects/home-page/src/styles.scss"],

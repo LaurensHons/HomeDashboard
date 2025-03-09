@@ -85,6 +85,7 @@ export class LayoutComponent implements OnInit {
 
   OnClick(nav: ButtonAction) {
     console.log(nav);
+    this.toggleMenu();
     if (nav.routerLink) this.router.navigate([nav.routerLink]);
     if (nav.onClick) nav.onClick();
   }

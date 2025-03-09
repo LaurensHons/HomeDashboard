@@ -32,7 +32,7 @@ import {
     RouterLink,
     RouterLinkActive,
     StoreModule.forFeature(componentFeatureKey, componentReducers),
-    EffectsModule.forFeature(componentEffects),
+    // EffectsModule.forFeature(componentEffects),
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,

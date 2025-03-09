@@ -23,7 +23,7 @@
           class="list-item"
           *ngFor="let link of layoutService.sideBarLinks"
           [routerLinkActive]="'active'"
-          [routerLink]="link.routerLink!"
+          (click)="OnClick(link)"
         >
           <mat-icon class="sidebaricon" *ngIf="link.icon">{{
             link.icon
