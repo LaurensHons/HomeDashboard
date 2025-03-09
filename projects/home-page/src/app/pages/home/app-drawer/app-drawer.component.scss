@@ -1,0 +1,49 @@
+.appdrawer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  --app-size: 200px;
+}
+
+.appitem {
+  width: var(--app-size);
+  height: var(--app-size);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px rgb(58, 56, 56) solid;
+  border-radius: 15px;
+  background-color: black;
+  box-shadow: rgba(165, 165, 165, 0.2) 0px 7px 29px 0px;
+}
+
+.appitem img {
+  max-width: calc(var(--app-size) - 10px);
+  max-height: calc(var(--app-size) - 10px);
+}
+
+.titlepanel {
+  padding-bottom: 20px;
+  span {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: x-large;
+  }
+}
+
+.panel {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: var(--off-background-color);
+  padding: 30px;
+}
+
+.apppannel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}

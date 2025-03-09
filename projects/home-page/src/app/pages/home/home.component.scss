@@ -3,15 +3,12 @@
 }
 
 .mainpanel {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 40px;
-  gap: 20px;
+  gap: 30px;
   align-items: center;
   max-width: 600px;
-  margin: auto;
-  background-color: var(--abs-background-color);
+  margin: 30px auto;
 }
 
 .textpanel p {
@@ -23,13 +20,6 @@
     color: var(--text-color);
     font-weight: 600;
   }
-}
-
-.panel {
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: var(--off-background-color);
-  padding: 30px;
 }
 
 .apppannel {
@@ -52,37 +42,59 @@
   color: lightblue;
 }
 
-.appdrawer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  --app-size: 200px;
-}
-
-.appitem {
-  width: var(--app-size);
-  height: var(--app-size);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border: 2px rgb(58, 56, 56) solid;
-  border-radius: 15px;
-  background-color: black;
-  box-shadow: rgba(165, 165, 165, 0.2) 0px 7px 29px 0px;
-}
-
-.appitem img {
-  max-width: calc(var(--app-size) - 10px);
-  max-height: calc(var(--app-size) - 10px);
-}
-
 a.link-div {
   position: absolute;
   display: block;
   text-decoration: none;
   width: var(--app-size);
   height: var(--app-size);
+}
+
+.bag {
+  animation: slide 10s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);
+  bottom: 0;
+  left: -50%;
+  opacity: 0.5;
+  position: fixed;
+  right: -50%;
+  top: 0;
+  z-index: -1;
+}
+
+.bag2 {
+  animation-direction: alternate-reverse;
+  animation-duration: 12s;
+}
+
+.bag3 {
+  animation-duration: 14s;
+}
+
+.content {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.25em;
+  box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  left: 50%;
+  position: fixed;
+  text-align: center;
+  top: calc(50% + 20px);
+  transform: translate(-50%, -50%);
+  height: calc(100% - 60px);
+  overflow-y: scroll;
+  border-radius: 15px;
+}
+
+h1 {
+  font-family: monospace;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(25%);
+  }
 }

@@ -69,7 +69,7 @@ export class LayoutComponent implements OnInit {
     if (isDarkMode) {
       document.body.id = 'dark-theme';
     } else {
-      document.body.id = '';
+      document.body.id = 'light-theme';
     }
   }
 

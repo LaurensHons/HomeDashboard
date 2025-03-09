@@ -11,11 +11,11 @@ export class LayoutService {
       icon: 'home',
       routerLink: 'home',
     }),
-    new ButtonAction({
-      displayName: 'About Me',
-      icon: 'person',
-      routerLink: 'about',
-    }),
+    // new ButtonAction({
+    //   displayName: 'About Me',
+    //   icon: 'person',
+    //   routerLink: 'about',
+    // }),
     new ButtonAction({
       displayName: 'Dashboard',
       icon: 'dashboard',

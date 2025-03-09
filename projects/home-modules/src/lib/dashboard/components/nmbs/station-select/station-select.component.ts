@@ -11,7 +11,7 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
-import { Subject, takeUntil, withLatestFrom } from 'rxjs';
+import { startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 import { CookieKey } from '../../../../services/cookie.helpers';
 import { CustomCookieService } from '../../../../services/cookie.service';
 import { CoreModule } from '../../../core.module';
@@ -60,19 +60,7 @@ export class StationSelectComponent implements OnInit, OnDestroy {
     this.fac.stations$
       .pipe(
         takeUntil(this.destroy$),
-        withLatestFrom(this.stationFilter.valueChanges)
-      )
-      .subscribe(([stations, filter]) => {
-        if (!filter) this.filteredstations = stations;
-        else
-          this.filteredstations = stations.filter(
-            (s) => s.name.indexOf(filter) != -1
-          );
-      });
-
-    this.fac.stations$
-      .pipe(
-        takeUntil(this.destroy$),
+        tap((s) => (this.stations = s)),
         withLatestFrom(
           this.cookieService.observeCookie(CookieKey.DashboardNMBSFAVORITES)
         )

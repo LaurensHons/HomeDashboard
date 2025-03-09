@@ -1,28 +1,26 @@
-<div class="bg h-100 w-100">
+<div class="bag"></div>
+<div class="bag bag2"></div>
+<div class="bag bag3"></div>
+<div class="content scrollbar bg">
   <div class="mainpanel">
-    <div class="panel textpanel">
+    <div class="card textpanel">
+      <p>I am Laurens Hons</p>
       <p>
-        Welcome to my homeserver webpage! Here, you can explore the heart of my
-        digital ecosystem, featuring a variety of services designed for
-        convenience and efficiency. From file sharing and media streaming to
-        personal projects and automation tools, this server is a hub of
-        creativity and utility. Whether you're looking to access shared
-        documents, stream your favorite shows, or check out my latest coding
-        projects, everything is just a click away. Dive in and discover the
-        possibilities!
+        I'm a software developper at heart and i like to build things like this
+        website. I have a degree in Applied Computer Science from UCLL and
+        currently work for ProcessDelight. Scroll down for more details and a
+        refined CV.
       </p>
     </div>
-
-    <div class="panel apppannel">
-      <div class="titlepanel">
-        <span>Apps</span>
-      </div>
-      <div class="appdrawer">
-        <div class="appitem" *ngFor="let app of apps">
-          <a [href]="app.href" class="link-div"></a>
-          <img [src]="app.icon" [alt]="app.name" />
-        </div>
-      </div>
+    <div class="panel">
+      <app-timeline></app-timeline>
     </div>
+    <div class="panel">
+      <app-projects></app-projects>
+    </div>
+  </div>
+  <app-cv></app-cv>
+  <div class="p-5">
+    <app-drawer></app-drawer>
   </div>
 </div>

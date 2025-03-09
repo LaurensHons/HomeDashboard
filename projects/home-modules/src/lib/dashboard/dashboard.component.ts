@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dashboard.setCoords(loc.coords.longitude, loc.coords.latitude);
       },
       (e) => {
-        console.error('User did not allow geolocation');
+        console.error('User did not allow geolocation', e);
       },
       { timeout: 10000 }
     );

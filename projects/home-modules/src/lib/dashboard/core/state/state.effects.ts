@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -16,8 +16,8 @@ import { registry } from 'chart.js';
 
 @Injectable({ providedIn: 'root' })
 export class StateEffects {
+  actions$ = inject(Actions);
   constructor(
-    private actions$: Actions,
     private nmbsFuncs: NMBSFunctionsService,
     private cookieService: CustomCookieService
   ) {}
