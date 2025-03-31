@@ -48,6 +48,19 @@
   gap: 10px;
 }
 
+.linkdrawer a {
+  text-decoration: none;
+  color: lightblue;
+}
+
+a.link-div {
+  position: absolute;
+  display: block;
+  text-decoration: none;
+  width: var(--app-size);
+  height: var(--app-size);
+}
+
 @media screen and (max-width: 600px) {
   .appdrawer {
     --app-size: 75px !important;

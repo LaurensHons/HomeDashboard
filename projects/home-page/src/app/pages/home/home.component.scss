@@ -37,19 +37,6 @@
   gap: 20px;
 }
 
-.linkdrawer a {
-  text-decoration: none;
-  color: lightblue;
-}
-
-a.link-div {
-  position: absolute;
-  display: block;
-  text-decoration: none;
-  width: var(--app-size);
-  height: var(--app-size);
-}
-
 .bag {
   animation: slide 10s ease-in-out infinite alternate;
   background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);
