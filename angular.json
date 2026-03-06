@@ -26,12 +26,12 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets/",
+                "input": "projects/home-page/src/assets/",
                 "output": "/assets/"
               },
               {
                 "glob": "favicon.ico",
-                "input": "src/",
+                "input": "projects/home-page/src/",
                 "output": "/"
               }
             ],
@@ -91,12 +91,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets"
+                "input": "projects/home-page/src/assets/",
+                "output": "/assets/"
               }
             ],
             "styles": ["projects/home-page/src/styles.scss"],
