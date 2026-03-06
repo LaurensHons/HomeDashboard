@@ -2,6 +2,31 @@
   background-color: var(--abs-background-color);
 }
 
+// --- Frosted glass card ---
+.content {
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
+  left: 50%;
+  position: fixed;
+  text-align: center;
+  top: calc(50% + 20px);
+  transform: translate(-50%, -50%);
+  height: calc(100% - 60px);
+  width: calc(100% - 32px);
+  max-width: 1200px;
+}
+
+.insidercontent {
+  overflow-y: auto;
+  height: 100%;
+  padding: 16px;
+}
+
 .mainpanel {
   display: flex;
   flex-direction: column;
@@ -14,51 +39,68 @@
   padding: 0 16px;
 }
 
-.textpanel {
-  p {
-    color: var(--text-color);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  p:first-child {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  p:last-child {
-    font-size: 0.95rem;
-    opacity: 0.85;
-  }
-}
-
-.titlepanel {
-  span {
-    color: var(--text-color);
-    font-weight: 600;
-  }
-}
-
-.apppannel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
 .panel {
   width: 100%;
 }
 
-.linkdrawer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+// --- Hero section ---
+.hero {
+  padding: 60px 24px 40px;
+  max-width: 700px;
+  text-align: center;
 }
 
+.hero-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #09f, #6c3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-tagline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-color);
+  opacity: 0.6;
+  margin: 0 0 24px;
+}
+
+.hero-description {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  opacity: 0.8;
+  margin: 0;
+}
+
+// --- Entrance animations ---
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-section {
+  opacity: 0;
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  animation-delay: calc(var(--anim-order, 0) * 150ms);
+}
+
+// --- Animated gradient bags ---
 .bag {
   animation: slide 10s ease-in-out infinite alternate;
   background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);
@@ -80,24 +122,13 @@
   animation-duration: 14s;
 }
 
-.content {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 15px;
-  box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
-  left: 50%;
-  position: fixed;
-  text-align: center;
-  top: calc(50% + 20px);
-  transform: translate(-50%, -50%);
-  height: calc(100% - 60px);
-  width: calc(100% - 32px);
-  max-width: 1200px;
-}
-.insidercontent {
-  overflow-y: auto;
-  height: 100%;
-  padding: 16px;
+@keyframes slide {
+  0% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(25%);
+  }
 }
 
 h1 {
@@ -108,6 +139,23 @@ h1 {
   padding: 30px 0;
 }
 
+// --- Dark mode ---
+:host-context(#dark-theme) {
+  .content {
+    background-color: rgba(24, 24, 24, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .hero-name {
+    background: linear-gradient(135deg, #3ab8ff, #8eff6c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+// --- Mobile ---
 @media screen and (max-width: 600px) {
   .mainpanel {
     margin: 16px auto;
@@ -124,16 +172,38 @@ h1 {
     padding: 8px;
   }
 
+  .hero {
+    padding: 32px 16px 24px;
+  }
+
+  .hero-name {
+    font-size: 2.25rem;
+  }
+
   .drawer-section {
     padding: 20px 0;
   }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
-@keyframes slide {
-  0% {
-    transform: translateX(-25%);
+// --- Accessibility ---
+@media (prefers-reduced-motion: reduce) {
+  .anim-section {
+    animation: none;
+    opacity: 1;
   }
-  100% {
-    transform: translateX(25%);
+
+  .bag {
+    animation: none;
   }
 }

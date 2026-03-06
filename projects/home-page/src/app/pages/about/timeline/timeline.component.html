@@ -6,6 +6,7 @@
     <p-timeline class="bg" [value]="timelineEvents">
       <ng-template pTemplate="content" let-event>
         <div class="bg timelineEvent">
+          <img *ngIf="event.logo" [src]="event.logo" [alt]="event.job + ' logo'" class="company-logo" />
           <span class="title">{{ event.title }}</span>
           <span class="job">{{ event.job }}</span>
           <span class="description">
