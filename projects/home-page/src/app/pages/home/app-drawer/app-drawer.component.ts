@@ -17,7 +17,7 @@ export class AppDrawerComponent {
     {
       name: 'jellyfin',
       href: 'https://jellyfin.laurenshons.com',
-      icon: 'https://jellyfin.laurenshons.com/web/assets/img/banner-light.png',
+      icon: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png',
     },
     {
       name: 'casaos',
