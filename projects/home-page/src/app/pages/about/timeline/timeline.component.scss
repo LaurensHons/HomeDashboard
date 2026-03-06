@@ -2,21 +2,27 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 14px;
+  gap: 4px;
+
   .title {
     font-weight: 600;
     color: var(--text-color);
   }
   .job {
-    font-weight: 600;
+    font-weight: 500;
     color: gray;
+    font-size: 0.9rem;
   }
   .description {
     color: var(--text-color);
+    line-height: 1.5;
+    font-size: 0.9rem;
   }
 
   .time {
     font-weight: 600;
     color: gray;
+    font-size: 0.9rem;
   }
 }
 

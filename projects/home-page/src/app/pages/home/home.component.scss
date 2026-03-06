@@ -7,11 +7,30 @@
   flex-direction: column;
   gap: 30px;
   align-items: center;
-  margin: 30px;
+  margin: 30px auto;
+  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 16px;
 }
 
-.textpanel p {
-  color: var(--text-color);
+.textpanel {
+  p {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  p:first-child {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  p:last-child {
+    font-size: 0.95rem;
+    opacity: 0.85;
+  }
 }
 
 .titlepanel {
@@ -26,6 +45,10 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+}
+
+.panel {
+  width: 100%;
 }
 
 .linkdrawer {
@@ -59,7 +82,7 @@
 
 .content {
   background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 0.25em;
+  border-radius: 15px;
   box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   left: 50%;
@@ -68,16 +91,42 @@
   top: calc(50% + 20px);
   transform: translate(-50%, -50%);
   height: calc(100% - 60px);
-  border-radius: 15px;
+  width: calc(100% - 32px);
+  max-width: 1200px;
 }
 .insidercontent {
   overflow-y: auto;
-  height: 99%;
-  max-width: 100vw;
+  height: 100%;
+  padding: 16px;
 }
 
 h1 {
   font-family: monospace;
+}
+
+.drawer-section {
+  padding: 30px 0;
+}
+
+@media screen and (max-width: 600px) {
+  .mainpanel {
+    margin: 16px auto;
+    gap: 20px;
+  }
+
+  .content {
+    width: calc(100% - 16px);
+    height: calc(100% - 48px);
+    top: calc(50% + 14px);
+  }
+
+  .insidercontent {
+    padding: 8px;
+  }
+
+  .drawer-section {
+    padding: 20px 0;
+  }
 }
 
 @keyframes slide {
